@@ -10,6 +10,7 @@ class DeresuteAPI{
 
 	public const RES_VER = 10044400;
 	public const APP_VER = "4.1.2";
+	public const WC_VER = "2017.4.2f2";
 
 	public const VIEWER_ID_KEY = "s%5VNQ(H$&Bqb6#3+78h29!Ft4wSg)ex";
 	public const SID_SALT = "r!I@nt8e5i=";
@@ -57,9 +58,9 @@ class DeresuteAPI{
 			"SID: " . md5($this->sid . self::SID_SALT),
 			"APP_VER: " . self::APP_VER,
 			"RES_VER: " . self::RES_VER,
+			"X-Unity-Version: " . self::WC_VER,
 			"IP_ADDRESS: 127.0.0.1",
 			"DEVICE_NAME: Nexus 42",
-			"X-Unity-Version: 5.4.5p1",
 			"GRAPHICS_DEVICE_NAME: 3dfx Voodoo2 (TM)",
 			"DEVICE_ID: " . md5("Totally a real Android"),
 			"PLATFORM_OS_VERSION: Android OS 13.3.7 / API-42 (XYZZ1Y/74726f6c6c)",
@@ -74,7 +75,7 @@ class DeresuteAPI{
 		$curl = curl_init();
 		curl_setopt_array($curl, [
 			CURLOPT_URL => self::BASE_URL . $endpoint,
-			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_SSL_VERIFYPEER => true,
 			CURLOPT_HTTPHEADER => $headers,
 			CURLOPT_POST => true,
 			CURLOPT_POSTFIELDS => $body,
