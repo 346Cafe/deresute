@@ -73,7 +73,7 @@ namespace towa0131\deresute{
 
 	function checkExtensions(){
 		$error = 0;
-		$requireExt = ["unitylz4", "msgpack", "curl", "mbstring"];
+		$requireExt = ["unitylz4", "msgpack", "curl", "mbstring", "sqlite3"];
 		foreach($requireExt as $extName){
 			if(!extension_loaded($extName)){
 				echo " No module loaded : " . $extName . PHP_EOL;
