@@ -89,7 +89,7 @@ class DeresuteAPI{
 
 		$response = base64_decode($response);
 		$key = substr($response, -32, 32);
-		//echo "[1]" . $key  . PHP_EOL . "[2]" . $response . PHP_EOL;
+
 		$plain = $this->decrypt256(substr($response, 0, -32), $key, $msg_iv);
 		$result = msgpack_unpack(base64_decode($plain));
 
