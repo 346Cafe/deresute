@@ -1,10 +1,9 @@
 {
   "name": "towa0131/deresute",
   "description": "A library for PHP. It's a deresute API.",
-  "minimum-stability": "stable",
   "license": "proprietary",
   "authors": [
-    {
+   {
       "name": "towa0131",
       "email": "towa.towa0131@gmail.com"
     }
@@ -16,6 +15,5 @@
     "psr-4": {
       "towa0131\\deresute\\": "./"
     }
-
   }
 }
