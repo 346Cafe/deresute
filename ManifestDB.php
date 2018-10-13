@@ -30,6 +30,9 @@ class ManifestDB{
 	public const SOUND_SINGLE = 0;
 	public const SOUND_BGM = 1;
 	public const SOUND_LIVE = 2;
+	public const SOUND_ROOM = 3;
+	public const SOUND_VOICE = 4;
+	public const SOUND_SE = 5;
 
 	public static function getAssetBundleDirectory(){
 		return self::getResourceServerURL() . self::DL_ROOT . self::RESOURCES_DIR . self::getQualityDirectory() . self::ASSETS_DIR . self::getPlatformDirectory();
@@ -50,6 +53,15 @@ class ManifestDB{
 				break;
 			case self::SOUND_LIVE:
 				return $prefix . self::COMMON_SOUND_DIR . "l/";
+				break;
+			case self::SOUND_ROOM:
+				return $prefix . self::COMMON_SOUND_DIR . "r/";
+				break;
+			case self::SOUND_VOICE:
+				return $prefix . self::COMMON_SOUND_DIR . "v/";
+				break;
+			case self::SOUND_SE:
+				return $prefix . self::COMMON_SOUND_DIR . "s/";
 				break;
 			default:
 				return $prefix;

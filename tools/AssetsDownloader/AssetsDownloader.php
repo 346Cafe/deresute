@@ -54,7 +54,7 @@ class AssetsDownloader{
 			$this->db = $db;
 		}
 			
-		$pathEntry = ["sounds/", "sounds/bgm/", "sounds/live/"];
+		$pathEntry = ["sounds/", "sounds/bgm/", "sounds/live/", "sounds/room/", "sounds/voice/", "sounds/se/"];
 		foreach($pathEntry as $entry){
 			if(!file_exists($this->path . $entry)){
 				$result = mkdir($this->path . $entry, $this->mode);
@@ -66,26 +66,51 @@ class AssetsDownloader{
 		}
 
 		echo "Downloading BGM..." . PHP_EOL;
-
+		sleep(3);
 		$this->downloadSounds(ManifestDB::SOUND_BGM);
 
 		echo "Downloading live sounds..." . PHP_EOL;
-	
+		sleep(3);
 		$this->downloadSounds(ManifestDB::SOUND_LIVE);
+
+		echo "Downloading room sounds..." . PHP_EOL;
+		sleep(3);
+		$this->downloadSounds(ManifestDB::SOUND_ROOM);
+
+		echo "Downloading voice sounds..." . PHP_EOL;
+		sleep(3);
+		$this->downloadSounds(ManifestDB::SOUND_VOICE);
+
+		echo "Downloading se sounds..." . PHP_EOL;
+		sleep(3);
+		$this->downloadSounds(ManifestDB::SOUND_SE);
 
 		echo "Successful!" . PHP_EOL;
 	}
 
 	public function downloadSounds(int $type = ManifestDB::SOUND_BGM){
+		$format = "SELECT '%s' || hash AS url, REPLACE(REPLACE(name, '%2\$s', ''),'.acb','') AS filename FROM manifests WHERE name LIKE '%2\$s%%acb'";
 		switch($type){
 			case ManifestDB::SOUND_BGM:
-				$result = $this->db->query("SELECT '" . ManifestDB::getSoundDirectory(ManifestDB::SOUND_BGM) . "'||hash AS url, REPLACE(REPLACE(name,'b/',''),'.acb','') AS filename FROM manifests WHERE name LIKE 'b/%acb'");
+				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_BGM), "b/"));
 				$dir = "sounds/bgm/";
 				break;
 
 			case ManifestDB::SOUND_LIVE:
-				$result = $this->db->query("SELECT '" . ManifestDB::getSoundDirectory(ManifestDB::SOUND_LIVE) . "'||hash AS url, REPLACE(REPLACE(name,'l/',''),'.acb','') AS filename FROM manifests WHERE name LIKE 'l/%acb'");
+				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_LIVE), "l/"));
 				$dir = "sounds/live/";
+				break;
+			case ManifestDB::SOUND_ROOM:
+				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_ROOM), "r/"));
+				$dir = "sounds/room/";
+				break;
+			case ManifestDB::SOUND_VOICE:
+				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_VOICE), "v/"));
+				$dir = "sounds/voice/";
+				break;
+			case ManifestDB::SOUND_SE:
+				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_SE), "s/"));
+				$dir = "sounds/se/";
 				break;
 			default:
 				return false;
