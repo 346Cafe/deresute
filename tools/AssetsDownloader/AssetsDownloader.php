@@ -5,6 +5,8 @@ namespace towa0131\deresute\tools\AssetsDownloader;
 use towa0131\deresute\DeresuteAPI;
 use towa0131\deresute\ManifestDB;
 
+use ByteUnits\Metric;
+
 class AssetsDownloader{
 
 	private $path = __DIR__ . "/dl/";
@@ -12,6 +14,9 @@ class AssetsDownloader{
 	private $mode = 0777;
 
 	private $db;
+	
+	private $contentsCount = 0;
+	private $totalBytes = 0;
 
 	public function __construct(string $path = __DIR__ . "/dl/", array $header, int $mode = 0777, \SQLite3 $db = null){
 		$this->path = $path;
@@ -47,13 +52,11 @@ class AssetsDownloader{
 	}
 
 	public function downloadAssets(\SQLite3 $db = null){
-		if($this->db == null){
-			if($db == null){
-				return false;
-			}
-			$this->db = $db;
-		}
-			
+		$this->checkDB($db);
+
+		$currentTimer = new Timer(time());
+		$totalTimer = new Timer(time());
+
 		$pathEntry = ["sounds/", "sounds/bgm/", "sounds/live/", "sounds/room/", "sounds/voice/", "sounds/se/"];
 		foreach($pathEntry as $entry){
 			if(!file_exists($this->path . $entry)){
@@ -65,26 +68,59 @@ class AssetsDownloader{
 			}
 		}
 
-		echo "Downloading BGM..." . PHP_EOL;
+		$time = function() use (&$currentTimer, &$totalTimer){
+			$time = time();
+			$diff = $currentTimer->diff($time);
+			$currentTimer->set($time);
+			$total = $totalTimer->diff($time);
+
+			$format = "%02d:%02d:%02d";
+			$diff = sprintf($format, floor($diff / 3600), floor(($diff / 60) % 60), ($diff % 60));
+			$total = sprintf($format, floor($total / 3600), floor(($total / 60) % 60), ($total % 60));
+
+			return [$diff, $total];
+		};
+
+		$format = str_repeat("=", 80) . PHP_EOL .
+		" %-30s | Time Taken : %s / Total Time : %s" . PHP_EOL .
+		str_repeat("-", 80) . PHP_EOL;
+
+		$summary = str_repeat("=", 80) . PHP_EOL .
+		" %-20s" . PHP_EOL .
+		str_repeat("-", 80) . PHP_EOL .
+		" Total Time : %s" . PHP_EOL .
+		" Total Files : %d" . PHP_EOL .
+		" Total File Size : %s" . PHP_EOL .
+		str_repeat("=", 80) . PHP_EOL;
+		
+
+		$result = $time();
+		echo sprintf($format, "Downloading BGM sonuds...", $result[0], $result[1]);
 		sleep(3);
 		$this->downloadSounds(ManifestDB::SOUND_BGM);
 
-		echo "Downloading live sounds..." . PHP_EOL;
+		$result = $time();
+		echo sprintf($format, "Downloading live sonuds...", $result[0], $result[1]);
 		sleep(3);
 		$this->downloadSounds(ManifestDB::SOUND_LIVE);
 
-		echo "Downloading room sounds..." . PHP_EOL;
+		$result = $time();
+		echo sprintf($format, "Downloading room sonuds...", $result[0], $result[1]);
 		sleep(3);
 		$this->downloadSounds(ManifestDB::SOUND_ROOM);
 
-		echo "Downloading voice sounds..." . PHP_EOL;
+		$result = $time();
+		echo sprintf($format, "Downloading voice sonuds...", $result[0], $result[1]);
 		sleep(3);
 		$this->downloadSounds(ManifestDB::SOUND_VOICE);
 
-		echo "Downloading se sounds..." . PHP_EOL;
+		$result = $time();
+		echo sprintf($format, "Downloading se sonuds...", $result[0], $result[1]);
 		sleep(3);
 		$this->downloadSounds(ManifestDB::SOUND_SE);
 
+		$result = $time();
+		echo sprintf($summary, "SUMMARY OF RESULTS", $result[1], $this->contentsCount, Metric::bytes($this->totalBytes)->format("GB/000"));
 		echo "Successful!" . PHP_EOL;
 	}
 
@@ -141,6 +177,20 @@ class AssetsDownloader{
 		}
 	}
 
+	private function checkDB(\SQLite3 $db = null, bool $shutdown = true){
+		if($this->db == null){
+			if($db == null){
+				if($shutdown){
+					echo "Error! DB was not found" . PHP_EOL;
+					exit(1);
+				}
+				return false;
+			}
+			$this->db = $db;
+		}
+		return true;
+	}
+
 	private function getContents(string $url, &$response, &$info, string $progress = "progressA", int $timeout = 30){
 		$curl = curl_init();
 		curl_setopt_array($curl, [
@@ -158,6 +208,9 @@ class AssetsDownloader{
 		]);
 		$response = curl_exec($curl);
 		$info = curl_getinfo($curl);
+
+		$this->contentsCount++;
+		$this->totalBytes += $info["download_content_length"];
 
 		curl_close($curl);
 	}
