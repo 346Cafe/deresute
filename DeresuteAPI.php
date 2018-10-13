@@ -21,7 +21,7 @@ class DeresuteAPI{
 	protected $sid = "";
 
 	public function __construct(string $udid, int $viewerId, int $userId){
-		require_once "./vendor/autoload.php";
+		require_once __DIR__ . "/vendor/autoload.php";
 		ini_set("msgpack.use_str8_serialization", 0); // Enable compatibility mode
 
 		$this->udid = $udid;
