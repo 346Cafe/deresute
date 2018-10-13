@@ -46,10 +46,10 @@ class ManifestDB{
 				return $prefix;
 				break;
 			case self::SOUND_BGM:
-				return $prefix . "b/";
+				return $prefix . self::COMMON_SOUND_DIR . "b/";
 				break;
 			case self::SOUND_LIVE:
-				return $prefix . "l/";
+				return $prefix . self::COMMON_SOUND_DIR . "l/";
 				break;
 			default:
 				return $prefix;
