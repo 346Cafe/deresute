@@ -26,8 +26,8 @@ curl -sS https://getcomposer.org/installer | php
 php composer.phar install
 ```
 
-### アプリの実行
-`php app.php`
+### テストの実行
+`php test-app.php`
 
 ## FAQ
 ### unitylz4のコンパイルでエラー
@@ -35,7 +35,7 @@ php composer.phar install
 もしされていないならコンパイルの前にインストールを行なってください。
 
 ### 本体のAPIの使用時にエラー
-必要なエクステンションがインストールされていない可能性があります。一度、`php app.php`で`app.php`を実行し、エラーが出ないか確認してください。
+必要なエクステンションがインストールされていない可能性があります。一度、`php test-app.php`で`test-app.php`を実行し、エラーが出ないか確認してください。
 
 ### app.phpの実行時にエラー
 `No module loaded : msgpack`などの文が表示されていませんか？

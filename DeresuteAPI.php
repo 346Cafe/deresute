@@ -8,7 +8,7 @@ class DeresuteAPI{
 
 	public const BASE_URL = "https://apis.game.starlight-stage.jp";
 
-	public const RES_VER = 10045300;
+	public const RES_VER = 10045700;
 	public const APP_VER = "4.2.1";
 	public const WC_VER = "2017.4.2f2";
 
@@ -21,6 +21,8 @@ class DeresuteAPI{
 	protected $sid = "";
 
 	public function __construct(string $udid, int $viewerId, int $userId){
+		require_once "./vendor/autoload.php";
+
 		$this->udid = $udid;
 		$this->viewerId = $viewerId;
 		$this->userId = $userId;
@@ -89,7 +91,7 @@ class DeresuteAPI{
 
 		$response = base64_decode($response);
 		$key = substr($response, -32, 32);
-		//echo "[1]" . $key  . PHP_EOL . "[2]" . $response . PHP_EOL;
+
 		$plain = $this->decrypt256(substr($response, 0, -32), $key, $msg_iv);
 		$result = msgpack_unpack(base64_decode($plain));
 
