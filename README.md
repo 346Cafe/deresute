@@ -37,6 +37,6 @@ php composer.phar install
 ### 本体のAPIの使用時にエラー
 必要なエクステンションがインストールされていない可能性があります。一度、`php test-app.php`で`test-app.php`を実行し、エラーが出ないか確認してください。
 
-### app.phpの実行時にエラー
+### test-app.phpの実行時にエラー
 `No module loaded : msgpack`などの文が表示されていませんか？
 もしされているのならば、**deresute**の使用に必要なエクステンションがインストールされていません。インストールを行うことでエラーが表示されなくなります。
