@@ -29,9 +29,6 @@ namespace towa0131\deresute{
 
 	$duration = time() - $time;
 	$time = sprintf("%02d:%02d:%02d", floor($duration / 3600), floor(($duration / 6 ) % 60 ), ($duration % 60));
-	if( $result == "s"){
-		$result = "0s";
-	}
 
 	$titleFormat = str_repeat("=", 80) . PHP_EOL .
 	" %s " . PHP_EOL .
