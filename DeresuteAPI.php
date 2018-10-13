@@ -22,6 +22,7 @@ class DeresuteAPI{
 
 	public function __construct(string $udid, int $viewerId, int $userId){
 		require_once "./vendor/autoload.php";
+		ini_set("msgpack.use_str8_serialization", 0); // Enable compatibility mode
 
 		$this->udid = $udid;
 		$this->viewerId = $viewerId;
@@ -52,26 +53,26 @@ class DeresuteAPI{
 		$body = base64_encode($this->encrypt256($plain, $key, $msg_iv) . $key);
 
 		$headers = [
-			"PARAM: " . sha1($this->udid . (string)$this->viewerId . $endpoint . $plain),
-			"KEYCHAIN: 727238026",
-			"CARRIER: google",
+			"Host: apis.game.starlight-stage.jp",
+			"User-Agent: Dalvik/1.6.0 (Linux; U; Android 4.4.2; SM-N9005 Build/NJH47F)",
+			"Content-Type: application/x-www-form-urlencoded",
+			"Content-Length: " . strlen($body),
+			"Connection: keep-alive",
+			"Accept: */*",
+			"Accept-Encoding: gzip, deflate",
+			"Accept-Language: en-us",
+			"X-Unity-Version: " . self::WC_VER,
 			"UDID: " . Cryptographer::encode($this->udid),
 			"USER_ID: " . Cryptographer::encode((string)$this->userId),
 			"SID: " . md5($this->sid . self::SID_SALT),
+			"PARAM: " . sha1($this->udid . (string)$this->viewerId . $endpoint . $plain),
+			"DEVICE: 1",
 			"APP_VER: " . self::APP_VER,
 			"RES_VER: " . self::RES_VER,
-			"X-Unity-Version: " . self::WC_VER,
-			"IP_ADDRESS: 127.0.0.1",
-			"DEVICE_NAME: Nexus 42",
-			"GRAPHICS_DEVICE_NAME: 3dfx Voodoo2 (TM)",
-			"DEVICE_ID: " . md5("Totally a real Android"),
+			"DEVICE_ID: " . md5("Totally a real Android"),			"DEVICE_NAME: Nexus 42",			"GRAPHICS_DEVICE_NAME: 3dfx Voodoo2 (TM)",			"IP_ADDRESS: 127.0.0.1",
 			"PLATFORM_OS_VERSION: Android OS 13.3.7 / API-42 (XYZZ1Y/74726f6c6c)",
-			"DEVICE: 1",
-			"Content-Type: application/x-www-form-urlencoded",
-			"Content-Length: " . strlen($body),
-			"User-Agent: Dalvik/1.6.0 (Linux; U; Android 4.4.2; SM-N9005 Build/NJH47F)",
-			"Connection: keep-alive",
-			"Host: apis.game.starlight-stage.jp"
+			"CARRIER: docomo",
+			"KEYCHAIN: 727238026"
 		];
 
 		$curl = curl_init();
@@ -94,6 +95,10 @@ class DeresuteAPI{
 
 		$plain = $this->decrypt256(substr($response, 0, -32), $key, $msg_iv);
 		$result = msgpack_unpack(base64_decode($plain));
+
+		if(isset($result["data_headers"]["sid"]) && !empty($result["data_headers"]["sid"])){
+			$this->sid = $result["data_headers"]["sid"];
+		}
 
 		return $result;
 	}
