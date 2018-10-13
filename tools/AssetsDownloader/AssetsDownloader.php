@@ -57,7 +57,7 @@ class AssetsDownloader{
 		$pathEntry = ["sounds/", "sounds/bgm/", "sounds/live/"];
 		foreach($pathEntry as $entry){
 			if(!file_exists($this->path . $entry)){
-				$result = mkdir($this->path . $entry, 0777);
+				$result = mkdir($this->path . $entry, $this->mode);
 				if(!$result){
 					echo "Failed to create " . $this->path . $entry . "directory";
 					exit(1);
