@@ -57,7 +57,7 @@ class AssetsDownloader{
 		$currentTimer = new Timer(time());
 		$totalTimer = new Timer(time());
 
-		$pathEntry = ["sounds/", "sounds/bgm/", "sounds/live/", "sounds/room/", "sounds/voice/", "sounds/se/"];
+		$pathEntry = ["sounds/", "sounds/bgm/", "sounds/live/", "sounds/story/", "sounds/room/", "sounds/voice/", "sounds/se/"];
 		foreach($pathEntry as $entry){
 			if(!file_exists($this->path . $entry)){
 				$result = mkdir($this->path . $entry, $this->mode);
@@ -105,6 +105,11 @@ class AssetsDownloader{
 		$this->downloadSounds(ManifestDB::SOUND_LIVE);
 
 		$result = $time();
+		echo sprintf($format, "Downloading story sonuds...", $result[0], $result[1]);
+		sleep(3);
+		$this->downloadSounds(ManifestDB::SOUND_STORY);
+
+		$result = $time();
 		echo sprintf($format, "Downloading room sonuds...", $result[0], $result[1]);
 		sleep(3);
 		$this->downloadSounds(ManifestDB::SOUND_ROOM);
@@ -136,20 +141,30 @@ class AssetsDownloader{
 				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_LIVE), "l/"));
 				$dir = "sounds/live/";
 				break;
+
+			case ManifestDB::SOUND_STORY:
+				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_STORY), "c/"));
+				$dir = "sounds/story/";
+				break;
+
 			case ManifestDB::SOUND_ROOM:
 				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_ROOM), "r/"));
 				$dir = "sounds/room/";
 				break;
+
 			case ManifestDB::SOUND_VOICE:
 				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_VOICE), "v/"));
 				$dir = "sounds/voice/";
 				break;
+
 			case ManifestDB::SOUND_SE:
 				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_SE), "s/"));
 				$dir = "sounds/se/";
 				break;
+
 			default:
 				return false;
+
 		}
 
 		while($row = $result->fetchArray()){
