@@ -12,14 +12,7 @@ namespace towa0131\deresute\tools\AssetsDownloader{
 
 	$downloadDir = __DIR__ . "/dl/";
 
-	$header = [
-		"APP_VER: " . DeresuteAPI::APP_VER,
-		"RES_VER: " . DeresuteAPI::RES_VER,
-		"X-Unity-Version: " . DeresuteAPI::WC_VER,
-		"User-Agent: Dalvik/1.6.0 (Linux; U; Android 4.4.2; SM-N9005 Build/NJH47F)",
-		"Connection: keep-alive",
-		"Host: " . ManifestDB::RESOURCE_SERVER
-	];
+	$header = DeresuteAPI::generateHeader(ManifestDB::RESOURCE_SERVER);
 
 	$downloader = new AssetsDownloader($downloadDir, $header);
 
