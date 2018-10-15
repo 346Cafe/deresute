@@ -30,7 +30,7 @@ class DeresuteAPI{
 		$this->sid = (string)$this->viewerId . (string)$this->udid;
 	}
 
-	public function encrypt256($data = "", $key, $iv) {
+	private function encrypt256($data = "", $key, $iv) {
 		$key = str_pad($key, 32, "\0");
 		$padding = 32 - (strlen($data) % 32);
 		$data .= str_repeat(chr(0), $padding);
@@ -38,7 +38,7 @@ class DeresuteAPI{
 		return rtrim($encrypted);
 	}
 
-	public function decrypt256($data = "", $key, $iv) {
+	private function decrypt256($data = "", $key, $iv) {
 		return trim(phpseclib_mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $data, MCRYPT_MODE_CBC, $iv), "\0");
 	}
 
@@ -101,5 +101,16 @@ class DeresuteAPI{
 		}
 
 		return $result;
+	}
+
+	public static function generateHeader(string $header){
+		$header = [
+			"APP_VER: " . self::APP_VER,
+			"RES_VER: " . self::RES_VER,
+			"X-Unity-Version: " . self::WC_VER,
+			"User-Agent: Dalvik/1.6.0 (Linux; U; Android 4.4.2; SM-N9005 Build/NJH47F)",
+			"Connection: keep-alive",
+			"Host: " . $header
+		];
 	}
 }
