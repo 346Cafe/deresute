@@ -34,15 +34,15 @@ class ManifestDB{
 	public const SOUND_VOICE = 4;
 	public const SOUND_SE = 5;
 
-	public static function getAssetBundleDirectory(){
+	public static function getAssetBundleDirectory() : string{
 		return self::getResourceServerURL() . self::DL_ROOT . self::RESOURCES_DIR . self::getQualityDirectory() . self::ASSETS_DIR . self::getPlatformDirectory();
 	}
 
-	public static function getManifestsDirectory(string $resVer){
+	public static function getManifestsDirectory(string $resVer) : string{
 		return self::getResourceServerURL() . self::DL_ROOT . $resVer . "/" . self::MANIFESTS_DIR;
 	}
 
-	public static function getSoundDirectory($type){
+	public static function getSoundDirectory(int $type) : string{
 		$prefix = self::getResourceServerURL() . self::DL_ROOT . self::RESOURCES_DIR . self::getQualityDirectory() . self::SOUND_DIR;
 		switch($type){
 			case self::SOUND_SINGLE:
@@ -69,27 +69,27 @@ class ManifestDB{
 		}
 	}
 
-	public static function getMovieDirectory(string $resVer){
+	public static function getMovieDirectory(string $resVer) : string{
 		return self::getResourceServerURL() . self::DL_ROOT . $resVer . "/" . self::getQualityDirectory() . self::MOVIE_DIR . self::getPlatformDirectory();
 	}
 
-	public static function getBlobDBDirectory(){
+	public static function getBlobDBDirectory() : string{
 		return self::getResourceServerURL(). self::DL_ROOT . self::RESOURCES_DIR . self::GENERIC_DIR;
 	}
 
-	public static function getMasterDBDirectory(){
+	public static function getMasterDBDirectory() : string{
 		return self::getResourceServerURL(). self::DL_ROOT . self::RESOURCES_DIR . self::GENERIC_DIR;
 	}
 
-	public static function getScheme(){
+	public static function getScheme() : string{
 		return self::HTTP_SCHEME;
 	}
 
-	public static function getResourceServerURL(){
+	public static function getResourceServerURL() : string{
 		return self::getScheme() . self::RESOURCE_SERVER;
 	}
 
-	public static function getQualityDirectory(int $type = 0){
+	public static function getQualityDirectory(int $type = 0) : string{
 		switch($type){
 			case 0: // Quality: High
 				return self::QUALITY_HIGH_DIR;
@@ -103,7 +103,7 @@ class ManifestDB{
 		}
 	}
 
-	public static function getPlatformDirectory(int $type = 0){
+	public static function getPlatformDirectory(int $type = 0) : string{
 		switch($type){
 			case 0: // Platform: Android
 				return self::PLATFORM_ANDROID_DIR;

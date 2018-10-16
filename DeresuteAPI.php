@@ -35,7 +35,7 @@ class DeresuteAPI{
 	 * Core API
 	 */
 
-	private function encrypt256($data = "", $key, $iv) {
+	private function encrypt256(string $data = "", string $key, string $iv) : string{
 		$key = str_pad($key, 32, "\0");
 		$padding = 32 - (strlen($data) % 32);
 		$data .= str_repeat(chr(0), $padding);
@@ -43,11 +43,11 @@ class DeresuteAPI{
 		return rtrim($encrypted);
 	}
 
-	private function decrypt256($data = "", $key, $iv) {
+	private function decrypt256(string $data = "", string $key, string $iv) : string{
 		return trim(phpseclib_mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $data, MCRYPT_MODE_CBC, $iv), "\0");
 	}
 
-	public function run(array $args, string $endpoint){
+	public function run(array $args, string $endpoint) : array{
 		$vid_iv = mt_rand(1000000000, 9999999999) . mt_rand(1000000000, 9999999999) . mt_rand(100000000000, 999999999999);
 		$args["timezone"] = "09:00:00";
 		$args["viewer_id"] = $vid_iv . base64_encode($this->encrypt256((string)$this->viewerId, self::VIEWER_ID_KEY, $vid_iv));
@@ -108,7 +108,7 @@ class DeresuteAPI{
 		return $result;
 	}
 
-	public static function generateHeader(string $host){
+	public static function generateHeader(string $host) : array{
 		$header = [
 			"APP_VER: " . self::APP_VER,
 			"RES_VER: " . self::RES_VER,
@@ -125,7 +125,7 @@ class DeresuteAPI{
 	 * Public API
 	 */
 
-	public function createNewAccount(){
+	public function createNewAccount() : bool{
 		$args = [
 			"device_name" => "Nexus 42",
 			"client_type" => "1",
