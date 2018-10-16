@@ -1,6 +1,7 @@
 <?php
 
-namespace towa0131\deresute;
+namespace towa0131\deresute;
+
 class TestAPI{
 
 	public const TEST_ERROR = 0;
