@@ -103,14 +103,16 @@ class DeresuteAPI{
 		return $result;
 	}
 
-	public static function generateHeader(string $header){
+	public static function generateHeader(string $host){
 		$header = [
 			"APP_VER: " . self::APP_VER,
 			"RES_VER: " . self::RES_VER,
 			"X-Unity-Version: " . self::WC_VER,
 			"User-Agent: Dalvik/1.6.0 (Linux; U; Android 4.4.2; SM-N9005 Build/NJH47F)",
 			"Connection: keep-alive",
-			"Host: " . $header
+			"Host: " . $host
 		];
+
+		return $header;
 	}
 }
