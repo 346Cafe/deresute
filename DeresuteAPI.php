@@ -18,6 +18,7 @@ class DeresuteAPI{
 	protected $udid = "";
 	protected $viewerId = 0;
 	protected $userId = 0;
+
 	protected $sid = "";
 
 	public function __construct(string $udid, int $viewerId, int $userId){
@@ -29,6 +30,10 @@ class DeresuteAPI{
 		$this->userId = $userId;
 		$this->sid = (string)$this->viewerId . (string)$this->udid;
 	}
+
+	/**
+	 * Core API
+	 */
 
 	private function encrypt256($data = "", $key, $iv) {
 		$key = str_pad($key, 32, "\0");
@@ -114,5 +119,30 @@ class DeresuteAPI{
 		];
 
 		return $header;
+	}
+
+	/**
+	 * Public API
+	 */
+
+	public function createNewAccount(){
+		$args = [
+			"device_name" => "Nexus 42",
+			"client_type" => "1",
+			"os_version" => "Android OS 13.3.7 / API-42 (XYZZ1Y/74726f6c6c)",
+			"app_version" => self::APP_VER,
+			"resource_version" => "Android OS 13.3.7 / API-42 (XYZZ1Y/74726f6c6c)"
+		];
+		$result = $this->run($args, "/tool/signup");
+
+		if($result["data_headers"]["result_code"] == 1){
+			$this->viewerId = $result["data_headers"]["viewer_id"];
+			$this->userId = $result["data_headers"]["user_id"];
+			$this->sid = $result["data_headers"]["sid"];
+
+			return true;
+		}
+
+		return false;
 	}
 }
