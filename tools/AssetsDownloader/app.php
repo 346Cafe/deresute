@@ -2,7 +2,7 @@
 
 namespace towa0131\deresute\tools\AssetsDownloader{
 
-	require_once "../../vendor/autoload.php";
+	require_once __DIR__ . "/../../vendor/autoload.php";
 
 	use towa0131\deresute\DeresuteAPI;
 	use towa0131\deresute\ManifestDB;
