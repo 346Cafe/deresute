@@ -13,7 +13,7 @@ class Cryptographer{
 				mt_rand(1000000000, 9999999999) . mt_rand(1000000000, 9999999999) . mt_rand(100000000000, 999999999999);
 	}
 
-	public static function decode($data){
+	public static function decode(string $data){
 		$num = hexdec(substr($data, 0, 4));
 		$result = '';
 		for ($i = 6; $i < strlen($data) && strlen($result) < $num; $i += 4) {

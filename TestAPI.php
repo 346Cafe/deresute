@@ -8,7 +8,7 @@ class TestAPI{
 	public const TEST_OK = 1;
 	public const TEST_WARNING = 2;
 
-	public static function checkExtensions($shutdown = true){
+	public static function checkExtensions(bool $shutdown = true) : int{
 		$error = 0;
 		$requireExt = ["unitylz4", "msgpack", "curl", "mbstring", "bcmath"];
 		foreach($requireExt as $extName){
@@ -30,7 +30,7 @@ class TestAPI{
 		return self::TEST_OK;
 	}
 
-	public static function checkAPI($shutdown = false){
+	public static function checkAPI(bool $shutdown = false) : int{
 		$api = new DeresuteAPI("01234567-89ab-cdef-0123-456789abcdef", 123456789, 987654321);
 		$args = [
 			"app_type" => 0,
