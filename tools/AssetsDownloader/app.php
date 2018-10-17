@@ -19,6 +19,9 @@ namespace towa0131\deresute\tools\AssetsDownloader{
 	echo "Manifest Downloading..." . PHP_EOL;
 	$downloader->downloadManifest(DeresuteAPI::RES_VER);
 
+	echo "Master Downloading..." . PHP_EOL;
+	$downloader->downloadMaster();
+
 	echo "Downloading Assets..." . PHP_EOL;
 	$downloader->downloadAssets();
 }
