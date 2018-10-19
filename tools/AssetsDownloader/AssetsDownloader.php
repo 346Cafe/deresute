@@ -51,6 +51,35 @@ class AssetsDownloader{
 		return true;
 	}
 
+	public function downloadMaster(\SQLite3 $db = null){
+		$this->checkDB($db);
+
+		$sql = "SELECT * FROM manifests WHERE name = 'master.mdb'";
+		$result = $this->db->query($sql);
+		while($row = $result->fetchArray()){
+			$name = $row[0];
+			$hash = $row[1];
+			$url = ManifestDB::getMasterDBDirectory() . $hash;
+			$this->getContents($url, $response, $info);
+			if($info["http_code"] === 200){
+				echo PHP_EOL;
+				echo "Successfully download master" . PHP_EOL;
+				file_put_contents($this->path . "master.mdb", $response);
+
+				echo "Decompressing..." . PHP_EOL;
+				$buffer = unity_lz4_uncompress($response);
+				file_put_contents($this->path . "master.db", $buffer);
+
+				echo "Successful!" . PHP_EOL;
+			}else{
+				echo "Error! HttpCode : " . $info["http_code"] . PHP_EOL;
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public function downloadAssets(\SQLite3 $db = null){
 		$this->checkDB($db);
 
