@@ -13,16 +13,13 @@ class AssetsDownloader{
 	private $header = [];
 	private $mode = 0777;
 
-	private $db;
-	
 	private $contentsCount = 0;
 	private $totalBytes = 0;
 
-	public function __construct(string $path = __DIR__ . "/dl/", array $header, int $mode = 0777, \SQLite3 $db = null){
+	public function __construct(string $path = __DIR__ . "/dl/", array $header, int $mode = 0777){
 		$this->path = $path;
 		$this->header = $header;
 		$this->mode = $mode;
-		$this->db = $db;
 
 		$this->createDirectory();
 	}
@@ -40,7 +37,7 @@ class AssetsDownloader{
 			$buffer = unity_lz4_uncompress($response);
 			file_put_contents($this->path . "manifest.db", $buffer);
 
-			$this->db = new \SQLite3($this->path . "manifest.db");
+			\ORM::configure("sqlite:" . $this->path . "manifest.db");
 
 			echo "Successful!" . PHP_EOL;
 		}else{
@@ -51,37 +48,35 @@ class AssetsDownloader{
 		return true;
 	}
 
-	public function downloadMaster(\SQLite3 $db = null){
-		$this->checkDB($db);
+	public function downloadMaster(){
+		$this->checkDB();
 
-		$sql = "SELECT * FROM manifests WHERE name = 'master.mdb'";
-		$result = $this->db->query($sql);
-		while($row = $result->fetchArray()){
-			$name = $row[0];
-			$hash = $row[1];
-			$url = ManifestDB::getMasterDBDirectory() . $hash;
-			$this->getContents($url, $response, $info);
-			if($info["http_code"] === 200){
-				echo PHP_EOL;
-				echo "Successfully download master" . PHP_EOL;
-				file_put_contents($this->path . "master.mdb", $response);
+		$result = \ORM::for_table("manifests")->where("name", "master.mdb")->find_one();
+		$name = $result->name;
+		$hash = $result->hash;
+		$url = ManifestDB::getMasterDBDirectory() . $hash;
+		$this->getContents($url, $response, $info);
 
-				echo "Decompressing..." . PHP_EOL;
-				$buffer = unity_lz4_uncompress($response);
-				file_put_contents($this->path . "master.db", $buffer);
+		if($info["http_code"] === 200){
+			echo PHP_EOL;
+			echo "Successfully download master" . PHP_EOL;
+			file_put_contents($this->path . "master.mdb", $response);
 
-				echo "Successful!" . PHP_EOL;
-			}else{
-				echo "Error! HttpCode : " . $info["http_code"] . PHP_EOL;
-				return false;
-			}
+			echo "Decompressing..." . PHP_EOL;
+			$buffer = unity_lz4_uncompress($response);
+			file_put_contents($this->path . "master.db", $buffer);
+
+			echo "Successful!" . PHP_EOL;
+		}else{
+			echo "Error! HttpCode : " . $info["http_code"] . PHP_EOL;
+			return false;
 		}
 
 		return true;
 	}
 
-	public function downloadAssets(\SQLite3 $db = null){
-		$this->checkDB($db);
+	public function downloadAssets(){
+		$this->checkDB();
 
 		$currentTimer = new Timer(time());
 		$totalTimer = new Timer(time());
@@ -122,36 +117,19 @@ class AssetsDownloader{
 		" Total File Size : %s" . PHP_EOL .
 		str_repeat("=", 80) . PHP_EOL;
 		
+		$download = function(string $prefix, int $type) use ($format, $time){
+			$result = $time();
+			echo sprintf($format, sprintf("Downloading %s sonuds...", $prefix), $result[0], $result[1]);
+			sleep(3);
+			$this->downloadSounds($type);
+		};
 
-		$result = $time();
-		echo sprintf($format, "Downloading BGM sonuds...", $result[0], $result[1]);
-		sleep(3);
-		$this->downloadSounds(ManifestDB::SOUND_BGM);
-
-		$result = $time();
-		echo sprintf($format, "Downloading live sonuds...", $result[0], $result[1]);
-		sleep(3);
-		$this->downloadSounds(ManifestDB::SOUND_LIVE);
-
-		$result = $time();
-		echo sprintf($format, "Downloading story sonuds...", $result[0], $result[1]);
-		sleep(3);
-		$this->downloadSounds(ManifestDB::SOUND_STORY);
-
-		$result = $time();
-		echo sprintf($format, "Downloading room sonuds...", $result[0], $result[1]);
-		sleep(3);
-		$this->downloadSounds(ManifestDB::SOUND_ROOM);
-
-		$result = $time();
-		echo sprintf($format, "Downloading voice sonuds...", $result[0], $result[1]);
-		sleep(3);
-		$this->downloadSounds(ManifestDB::SOUND_VOICE);
-
-		$result = $time();
-		echo sprintf($format, "Downloading se sonuds...", $result[0], $result[1]);
-		sleep(3);
-		$this->downloadSounds(ManifestDB::SOUND_SE);
+		$download("bgm", ManifestDB::SOUND_BGM);
+		$download("live", ManifestDB::SOUND_LIVE);
+		$download("story", ManifestDB::SOUND_STORY);
+		$download("room", ManifestDB::SOUND_ROOM);
+		$download("voice", ManifestDB::SOUND_VOICE);
+		$download("se", ManifestDB::SOUND_SE);
 
 		$result = $time();
 		echo sprintf($summary, "SUMMARY OF RESULTS", $result[1], $this->contentsCount, Metric::bytes($this->totalBytes)->format("GB/000"));
@@ -159,46 +137,46 @@ class AssetsDownloader{
 	}
 
 	public function downloadSounds(int $type = ManifestDB::SOUND_BGM){
-		$format = "SELECT '%s' || hash AS url, REPLACE(REPLACE(name, '%2\$s', ''),'.acb','') AS filename FROM manifests WHERE name LIKE '%2\$s%%acb'";
 		switch($type){
 			case ManifestDB::SOUND_BGM:
-				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_BGM), "b/"));
+				$index = "b/";
 				$dir = "sounds/bgm/";
 				break;
 
 			case ManifestDB::SOUND_LIVE:
-				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_LIVE), "l/"));
+				$index = "l/";
 				$dir = "sounds/live/";
 				break;
 
 			case ManifestDB::SOUND_STORY:
-				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_STORY), "c/"));
+				$index = "c/";
 				$dir = "sounds/story/";
 				break;
 
 			case ManifestDB::SOUND_ROOM:
-				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_ROOM), "r/"));
+				$index = "r/";
 				$dir = "sounds/room/";
 				break;
 
 			case ManifestDB::SOUND_VOICE:
-				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_VOICE), "v/"));
+				$index = "v/";
 				$dir = "sounds/voice/";
 				break;
 
 			case ManifestDB::SOUND_SE:
-				$result = $this->db->query(sprintf($format, ManifestDB::getSoundDirectory(ManifestDB::SOUND_SE), "s/"));
+				$index = "s/";
 				$dir = "sounds/se/";
 				break;
 
 			default:
 				return false;
-
 		}
 
-		while($row = $result->fetchArray()){
-			$url = $row[0];
-			$name = $row[1];
+		$results = \ORM::for_table("manifests")->whereLike("name", $index . "%acb")->find_many();
+
+		foreach($results as $result){
+			$name = str_replace($index, "", $result->name);
+			$url = ManifestDB::getSoundDirectory($type) . $result->hash;
 
 			echo "Downloading : " . $name . PHP_EOL;
 			$this->getContents($url, $response, $info, "progressB");
@@ -221,16 +199,16 @@ class AssetsDownloader{
 		}
 	}
 
-	private function checkDB(\SQLite3 $db = null, bool $shutdown = true){
-		if($this->db == null){
-			if($db == null){
-				if($shutdown){
-					echo "Error! DB was not found" . PHP_EOL;
-					exit(1);
-				}
-				return false;
+	private function checkDB(bool $shutdown = true){
+		try{
+			\ORM::for_table("manifests")->find_many();
+		}catch(\PDOException $exception){
+			if($shutdown){
+				echo "Error! DB was not found" . PHP_EOL;
+				exit(1);
 			}
-			$this->db = $db;
+
+			return false;
 		}
 		return true;
 	}
