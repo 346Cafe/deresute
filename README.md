@@ -1,33 +1,58 @@
 # deresute
+[![GitHub license](https://img.shields.io/github/license/towa0131/deresute.svg?style=for-the-badge)](https://github.com/towa0131/deresute/blob/master/LICENSE)
+[![GitHub forks](https://img.shields.io/github/forks/towa0131/deresute.svg?style=for-the-badge)](https://github.com/towa0131/deresute/network)
+[![GitHub stars](https://img.shields.io/github/stars/towa0131/deresute.svg?style=for-the-badge)](https://github.com/towa0131/deresute/stargazers)
+[![GitHub last commit](https://img.shields.io/github/last-commit/towa0131/deresute.svg?style=for-the-badge)](https://github.com/towa0131/deresute/commits/master)
+
+[![PHP version](https://img.shields.io/travis/php-v/symfony/symfony.svg?style=for-the-badge)](https://github.com/towa0131/deresute/)
+[![Travis CI](https://img.shields.io/travis/towa0131/deresute.svg?style=for-the-badge)](about:blank/)
+
 ## deresuteについて
-**deresute**はCGSSAPI/CGSS AssetBundleのPHP用ライブラリです。
+**deresute**はCGSSAPI / CGSS AssetBundle ToolのPHP用ライブラリです。
 
 ## セットアップ
 ### unitylz4のコンパイル
-```
-# php-unity-lz4をGitHubからクローン
-git clone https://github.com/towa0131/php-unity-lz4
-cd php-unity-lz4
 
-# コンパイルを実行
-./install.sh
+- php-unity-lz4をGitHubからクローン
 ```
-これでエクステンションがインストールされるので`php.ini`ファイルに`extension=unitylz4`を追加してください。
+$ git clone https://github.com/towa0131/php-unity-lz4
+$ cd php-unity-lz4
+```
+- コンパイル/インストールを実行
+```
+$ ./install.sh
+```
+これでエクステンションがインストールされるので`php.ini`ファイルに`extension=unitylz4`を追加し、エクステンションを有効化してください。
 
 ### deresute本体のセットアップ
+- deresuteをGitHubからクローン
 ```
-# deresuteをGitHubからクローン
-git clone https://github.com/towa0131/deresute
-cd deresute
+$ git clone https://github.com/towa0131/deresute
+$ cd deresute
+```
+- Composerのダウンロード
+```
+$ curl -sS https://getcomposer.org/installer | php
+```
+- ライブラリをインストール
+```
+$ php composer.phar install
+```
 
-# Composerのダウンロード
-curl -sS https://getcomposer.org/installer | php
-# ライブラリをインストール
-php composer.phar install
+または、
+- Packagistからderesuteをインストール
+```
+$ php composer.phar require towa0131/deresute
 ```
 
 ### テストの実行
-`php test-app.php`
+```
+$ php test-app.php
+```
+Packagistからインストールした場合は、
+```
+$ php vendor/towa0131/deresute/test-app.php
+```
 
 ## FAQ
 ### unitylz4のコンパイルでエラー
