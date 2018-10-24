@@ -12,11 +12,10 @@
 [![Packagist download](https://img.shields.io/packagist/dt/towa0131/deresute.svg?style=for-the-badge)](https://packagist.org/packages/towa0131/deresute)
 
 ## deresuteについて
-**deresute**はCGSSAPI / CGSS AssetBundle ToolのPHP用ライブラリです。
+**deresute**はCGSS API / CGSS AssetBundle ToolのPHP用ライブラリです。
 
 ## セットアップ
 ### unitylz4のコンパイル
-
 - php-unity-lz4をGitHubからクローン
 ```
 $ git clone https://github.com/towa0131/php-unity-lz4
@@ -27,6 +26,7 @@ $ cd php-unity-lz4
 ```
 $ ./install.sh
 ```
+
 これでエクステンションがインストールされるので`php.ini`ファイルに`extension=unitylz4`を追加し、エクステンションを有効化してください。
 
 ### deresute本体のセットアップ
@@ -61,10 +61,11 @@ $ php composer.phar require towa0131/deresute
 ```
 
 ### テストの実行
+- #### GitHubからダウンロードした場合
 ```
 $ php test-app.php
 ```
-Packagistからインストールした場合は、
+- #### Packagistからダウンロードした場合
 ```
 $ php vendor/towa0131/deresute/test-app.php
 ```
