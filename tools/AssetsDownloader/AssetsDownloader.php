@@ -183,7 +183,7 @@ class AssetsDownloader{
 
 			echo PHP_EOL;
 
-			file_put_contents($this->path . $dir . $name . ".acb", $response);
+			file_put_contents($this->path . $dir . $name, $response);
 		}
 
 		return true;
