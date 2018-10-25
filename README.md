@@ -1,13 +1,13 @@
 # deresute
-![banner](https://github.com/towa0131/deresute/raw/master/docs/deresute.png)
+![banner](https://github.com/346Cafe/deresute/raw/master/docs/deresute.png)
 
-[![GitHub license](https://img.shields.io/github/license/towa0131/deresute.svg?style=for-the-badge)](https://github.com/towa0131/deresute/blob/master/LICENSE)
-[![GitHub forks](https://img.shields.io/github/forks/towa0131/deresute.svg?style=for-the-badge)](https://github.com/towa0131/deresute/network)
-[![GitHub stars](https://img.shields.io/github/stars/towa0131/deresute.svg?style=for-the-badge)](https://github.com/towa0131/deresute/stargazers)
-[![GitHub last commit](https://img.shields.io/github/last-commit/towa0131/deresute.svg?style=for-the-badge)](https://github.com/towa0131/deresute/commits/master)
+[![GitHub license](https://img.shields.io/github/license/346Cafe/deresute.svg?style=for-the-badge)](https://github.com/346Cafe/deresute/blob/master/LICENSE)
+[![GitHub forks](https://img.shields.io/github/forks/346Cafe/deresute.svg?style=for-the-badge)](https://github.com/346Cafe/deresute/network)
+[![GitHub stars](https://img.shields.io/github/stars/346Cafe/deresute.svg?style=for-the-badge)](https://github.com/346Cafe/deresute/stargazers)
+[![GitHub last commit](https://img.shields.io/github/last-commit/346Cafe/deresute.svg?style=for-the-badge)](https://github.com/346Cafe/deresute/commits/master)
 
-[![PHP version](https://img.shields.io/travis/php-v/symfony/symfony.svg?style=for-the-badge)](https://github.com/towa0131/deresute/)
-[![Travis CI](https://img.shields.io/travis/towa0131/deresute.svg?style=for-the-badge)](about:blank/)
+[![PHP version](https://img.shields.io/travis/php-v/symfony/symfony.svg?style=for-the-badge)](https://github.com/346Cafe/deresute/)
+[![Travis CI](https://img.shields.io/travis/346Cafe/deresute.svg?style=for-the-badge)](about:blank/)
 [![Packagist version](https://img.shields.io/packagist/v/towa0131/deresute.svg?style=for-the-badge)](https://packagist.org/packages/towa0131/deresute)
 [![Packagist download](https://img.shields.io/packagist/dt/towa0131/deresute.svg?style=for-the-badge)](https://packagist.org/packages/towa0131/deresute)
 
@@ -35,7 +35,7 @@ $ ./install.sh
 #### GitHubからダウンロード
 - **deresute**をGitHubからクローン
 ```
-$ git clone https://github.com/towa0131/deresute
+$ git clone https://github.com/346Cafe/deresute
 $ cd deresute
 ```
 
