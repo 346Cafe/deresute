@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "942ee4a966948016495f93305fe4ae4f",
+    "content-hash": "ada32321d3c6f3607023693145bd23be",
     "packages": [
         {
             "name": "gabrielelana/byte-units",
@@ -268,6 +268,9 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=7.0.1",
+        "php-64bit": "*"
+    },
     "platform-dev": []
 }
