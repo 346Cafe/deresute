@@ -83,7 +83,7 @@ $ php vendor/towa0131/deresute/test-app.php
 もしされているのならば、**deresute**の使用に必要なエクステンションがインストールされていません。インストールを行うことでエラーが表示されなくなります。
 
 ## 使用しているライブラリ
-- [towa0131/unity-lz4](https://github.com/towa0131/php-unity-lz4) - unity.lz4フォーマットを扱うPHPエクステンション
+- [towa0131/unity-lz4](https://github.com/towa0131/php-unity-lz4) - unity3d.lz4フォーマットを扱うPHPエクステンション
 - [phpseclib/mcrypt_compat](https://github.com/phpseclib/mcrypt_compat) - データの暗号化 / 復号化を行うライブラリ
-- [gabrielelana/byte-units](https://github.com/gabrielelana/byte-units) - バイトをパース / 変換するためのライブラリ
+- [gabrielelana/byte-units](https://github.com/gabrielelana/byte-units) - バイト数値をパース / 変換するためのライブラリ
 - [j4mie/idiorm](https://github.com/j4mie/idiorm) - ORMを扱うライブラリ
