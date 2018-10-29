@@ -1,5 +1,5 @@
 # deresute
-![banner](https://github.com/346Cafe/deresute/raw/master/docs/deresute.png)
+![banner](https://is4-ssl.mzstatic.com/image/thumb/Purple118/v4/e2/f6/f4/e2f6f484-25dc-6318-fda5-b5ff4a88d371/source/1920x1080bb.jpg)
 
 [![GitHub license](https://img.shields.io/github/license/346Cafe/deresute.svg?style=for-the-badge)](https://github.com/346Cafe/deresute/blob/master/LICENSE)
 [![GitHub forks](https://img.shields.io/github/forks/346Cafe/deresute.svg?style=for-the-badge)](https://github.com/346Cafe/deresute/network)
