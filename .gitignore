@@ -6,3 +6,7 @@ vendor/
 
 # Assets
 tools/AssetsDownloader/dl/
+
+# Debug tools
+tools/AssetsDownloader/converter.php
+tools/AssetsDownloader/results/
