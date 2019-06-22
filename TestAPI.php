@@ -10,7 +10,7 @@ class TestAPI{
 
 	public static function checkExtensions(bool $shutdown = true) : int{
 		$error = 0;
-		$requireExt = ["unitylz4", "msgpack", "curl", "mbstring", "bcmath", "cgss"];
+		$requireExt = ["unitylz4", "msgpack", "curl", "mbstring", "bcmath", "sqlite3", "cgss"];
 		foreach($requireExt as $extName){
 			if(!extension_loaded($extName)){
 				echo " No module loaded : " . $extName . PHP_EOL;
