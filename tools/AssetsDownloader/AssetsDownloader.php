@@ -54,7 +54,7 @@ class AssetsDownloader{
 		$result = \ORM::for_table("manifests")->where("name", "master.mdb")->find_one();
 		$name = $result->name;
 		$hash = $result->hash;
-		$url = ManifestDB::getMasterDBDirectory() . $hash;
+		$url = ManifestDB::getMasterDBDirectory() . substr($hash, 0, 2) . "/" . $hash;
 		$this->getContents($url, $response, $info);
 
 		if($info["http_code"] === 200){
@@ -176,7 +176,7 @@ class AssetsDownloader{
 
 		foreach($results as $result){
 			$name = str_replace($index, "", $result->name);
-			$url = ManifestDB::getSoundDirectory($type) . $result->hash;
+			$url = ManifestDB::getSoundDirectory() . substr($result->hash, 0, 2) . "/" . $result->hash;
 
 			echo "Downloading : " . $name . PHP_EOL;
 			$this->getContents($url, $response, $info, "progressB");
