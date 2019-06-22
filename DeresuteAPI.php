@@ -8,7 +8,7 @@ class DeresuteAPI{
 
 	public const BASE_URL = "https://apis.game.starlight-stage.jp";
 
-	public const RES_VER = 10046600;
+	public const RES_VER = 10057440;
 	public const APP_VER = "4.2.1";
 	public const WC_VER = "2017.4.2f2";
 
@@ -67,16 +67,18 @@ class DeresuteAPI{
 			"Accept-Language: en-us",
 			"X-Unity-Version: " . self::WC_VER,
 			"UDID: " . Cryptographer::encode($this->udid),
-			"USER_ID: " . Cryptographer::encode((string)$this->userId),
+			"USER-ID: " . Cryptographer::encode((string)$this->userId),
 			"SID: " . md5($this->sid . self::SID_SALT),
 			"PARAM: " . sha1($this->udid . (string)$this->viewerId . $endpoint . $plain),
 			"DEVICE: 1",
-			"APP_VER: " . self::APP_VER,
-			"RES_VER: " . self::RES_VER,
-			"DEVICE_ID: " . md5("Totally a real Android"),			"DEVICE_NAME: Nexus 42",			"GRAPHICS_DEVICE_NAME: 3dfx Voodoo2 (TM)",			"IP_ADDRESS: 127.0.0.1",
-			"PLATFORM_OS_VERSION: Android OS 13.3.7 / API-42 (XYZZ1Y/74726f6c6c)",
+			"APP-VER: " . self::APP_VER,
+			"RES-VER: " . self::RES_VER,
+			"DEVICE-ID: " . md5("Totally a real Android"),			"DEVICE-NAME: Nexus 42",			"GRAPHICS-DEVICE-NAME: 3dfx Voodoo2 (TM)",			"IP-ADDRESS: 127.0.0.1",
+			"PLATFORM-OS-VERSION: Android OS 13.3.7 / API-42 (XYZZ1Y/74726f6c6c)",
 			"CARRIER: docomo",
-			"KEYCHAIN: 727238026"
+			"KEYCHAIN: 727238026",
+			"PROCESSOR-TYPE: ARMv7 VFPv3 NEON",
+			"IDFA: "
 		];
 
 		$curl = curl_init();
@@ -109,8 +111,8 @@ class DeresuteAPI{
 
 	public static function generateHeader(string $host) : array{
 		$header = [
-			"APP_VER: " . self::APP_VER,
-			"RES_VER: " . self::RES_VER,
+			"APP-VER: " . self::APP_VER,
+			"RES-VER: " . self::RES_VER,
 			"X-Unity-Version: " . self::WC_VER,
 			"User-Agent: Dalvik/1.6.0 (Linux; U; Android 4.4.2; SM-N9005 Build/NJH47F)",
 			"Connection: keep-alive",
