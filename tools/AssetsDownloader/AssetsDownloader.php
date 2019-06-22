@@ -54,7 +54,7 @@ class AssetsDownloader{
 		$result = \ORM::for_table("manifests")->where("name", "master.mdb")->find_one();
 		$name = $result->name;
 		$hash = $result->hash;
-		$url = ManifestDB::getMasterDBDirectory() . $hash;
+		$url = ManifestDB::getMasterDBDirectory() . substr($hash, 0, 2) . "/" . $hash;
 		$this->getContents($url, $response, $info);
 
 		if($info["http_code"] === 200){
@@ -136,7 +136,20 @@ class AssetsDownloader{
 		echo "Successful!" . PHP_EOL;
 	}
 
-	public function downloadSounds(int $type = ManifestDB::SOUND_BGM){
+	public function extractAssets(){
+		foreach(glob("dl/sounds/*/*.acb", GLOB_BRACE) as $file){
+			if(is_file($file)){
+				$exploded = explode("/", $file);
+				$name = str_replace(".acb", "", end($exploded));
+				$path = str_replace($name . ".acb", "", $file);
+				echo "Extracting : " . $name . PHP_EOL;
+				acbunpack($file);
+				hca2wav($path . "_acb_" . $name . "/" . $name . ".hca", "dl/" . $name . ".wav", CGSS_HCA_KEY_1, CGSS_HCA_KEY_2);
+			}
+		}
+	}
+
+	private function downloadSounds(int $type = ManifestDB::SOUND_BGM){
 		switch($type){
 			case ManifestDB::SOUND_BGM:
 				$index = "b/";
@@ -176,7 +189,7 @@ class AssetsDownloader{
 
 		foreach($results as $result){
 			$name = str_replace($index, "", $result->name);
-			$url = ManifestDB::getSoundDirectory($type) . $result->hash;
+			$url = ManifestDB::getSoundDirectory() . substr($result->hash, 0, 2) . "/" . $result->hash;
 
 			echo "Downloading : " . $name . PHP_EOL;
 			$this->getContents($url, $response, $info, "progressB");

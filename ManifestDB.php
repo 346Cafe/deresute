@@ -7,7 +7,8 @@ use towa0131\deresute\Cryptographer;
 class ManifestDB{
 
 	public const HTTP_SCHEME = "http://";
-	public const RESOURCE_SERVER = "storage.game.starlight-stage.jp/";
+	public const RESOURCE_SERVER_OLD = "storage.game.starlight-stage.jp/";
+	public const RESOURCE_SERVER = "asset-starlight-stage.akamaized.net/";
     
 	public const DB_NAME = "manifest.db";
 	public const MANIFEST_TABLE = "manifests";
@@ -36,53 +37,19 @@ class ManifestDB{
 	public const SOUND_SE = 6;
 
 	public static function getAssetBundleDirectory() : string{
-		return self::getResourceServerURL() . self::DL_ROOT . self::RESOURCES_DIR . self::getQualityDirectory() . self::ASSETS_DIR . self::getPlatformDirectory();
+		return self::getResourceServerURL() . self::DL_ROOT . self::RESOURCES_DIR . self::ASSETS_DIR;
 	}
 
 	public static function getManifestsDirectory(string $resVer) : string{
 		return self::getResourceServerURL() . self::DL_ROOT . $resVer . "/" . self::MANIFESTS_DIR;
 	}
 
-	public static function getSoundDirectory(int $type) : string{
-		$prefix = self::getResourceServerURL() . self::DL_ROOT . self::RESOURCES_DIR . self::getQualityDirectory() . self::SOUND_DIR;
-		switch($type){
-			case self::SOUND_SINGLE:
-				return $prefix;
-				break;
-
-			case self::SOUND_BGM:
-				return $prefix . self::COMMON_SOUND_DIR . "b/";
-				break;
-
-			case self::SOUND_STORY:
-				return $prefix . self::COMMON_SOUND_DIR . "c/";
-				break;
-
-			case self::SOUND_LIVE:
-				return $prefix . self::COMMON_SOUND_DIR . "l/";
-				break;
-
-			case self::SOUND_ROOM:
-				return $prefix . self::COMMON_SOUND_DIR . "r/";
-				break;
-
-			case self::SOUND_VOICE:
-				return $prefix . self::COMMON_SOUND_DIR . "v/";
-				break;
-
-			case self::SOUND_SE:
-				return $prefix . self::COMMON_SOUND_DIR . "s/";
-				break;
-
-			default:
-				return $prefix;
-				break;
-
-		}
+	public static function getSoundDirectory() : string{
+		return self::getResourceServerURL() . self::DL_ROOT . self::RESOURCES_DIR . self::SOUND_DIR;
 	}
 
 	public static function getMovieDirectory(string $resVer) : string{
-		return self::getResourceServerURL() . self::DL_ROOT . $resVer . "/" . self::getQualityDirectory() . self::MOVIE_DIR . self::getPlatformDirectory();
+		return self::getResourceServerURL() . self::DL_ROOT . $resVer . "/" . self::MOVIE_DIR . self::getPlatformDirectory();
 	}
 
 	public static function getBlobDBDirectory() : string{
