@@ -24,4 +24,7 @@ namespace towa0131\deresute\tools\AssetsDownloader{
 
 	echo "Downloading Assets..." . PHP_EOL;
 	$downloader->downloadAssets();
+
+	echo "Extracting Assets..." . PHP_EOL;
+	$downloader->extractAssets();
 }
