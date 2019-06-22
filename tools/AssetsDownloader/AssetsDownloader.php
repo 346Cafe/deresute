@@ -136,7 +136,20 @@ class AssetsDownloader{
 		echo "Successful!" . PHP_EOL;
 	}
 
-	public function downloadSounds(int $type = ManifestDB::SOUND_BGM){
+	public function extractAssets(){
+		foreach(glob("dl/sounds/*/*.acb", GLOB_BRACE) as $file){
+			if(is_file($file)){
+				$exploded = explode("/", $file);
+				$name = str_replace(".acb", "", end($exploded));
+				$path = str_replace($name . ".acb", "", $file);
+				echo "Extracting : " . $name . PHP_EOL;
+				acbunpack($file);
+				hca2wav($path . "_acb_" . $name . "/" . $name . ".hca", "dl/" . $name . ".wav", CGSS_HCA_KEY_1, CGSS_HCA_KEY_2);
+			}
+		}
+	}
+
+	private function downloadSounds(int $type = ManifestDB::SOUND_BGM){
 		switch($type){
 			case ManifestDB::SOUND_BGM:
 				$index = "b/";
