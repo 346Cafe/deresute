@@ -81,7 +81,7 @@ class AssetsDownloader{
 		$currentTimer = new Timer(time());
 		$totalTimer = new Timer(time());
 
-		$pathEntry = ["sounds/", "sounds/bgm/", "sounds/live/", "sounds/story/", "sounds/room/", "sounds/voice/", "sounds/se/"];
+		$pathEntry = ["sounds/", "sounds/bgm/", "sounds/live/", "sounds/story/", "sounds/room/", "sounds/voice/", "sounds/se/", "assetbundle/"];
 		foreach($pathEntry as $entry){
 			if(!file_exists($this->path . $entry)){
 				$result = mkdir($this->path . $entry, $this->mode);
@@ -116,7 +116,7 @@ class AssetsDownloader{
 		" Total Files : %d" . PHP_EOL .
 		" Total File Size : %s" . PHP_EOL .
 		str_repeat("=", 80) . PHP_EOL;
-		
+
 		$download = function(string $prefix, int $type) use ($format, $time){
 			$result = $time();
 			echo sprintf($format, sprintf("Downloading %s sonuds...", $prefix), $result[0], $result[1]);
@@ -130,6 +130,11 @@ class AssetsDownloader{
 		$download("room", ManifestDB::SOUND_ROOM);
 		$download("voice", ManifestDB::SOUND_VOICE);
 		$download("se", ManifestDB::SOUND_SE);
+
+		$result = $time();
+		echo sprintf($format, "Downloading AssetBundle...", $result[0], $result[1]);
+		sleep(3);
+		$this->downloadAssetBundle();
 
 		$result = $time();
 		echo sprintf($summary, "SUMMARY OF RESULTS", $result[1], $this->contentsCount, Metric::bytes($this->totalBytes)->format("GB/000"));
@@ -197,6 +202,29 @@ class AssetsDownloader{
 			echo PHP_EOL;
 
 			file_put_contents($this->path . $dir . $name, $response);
+		}
+
+		return true;
+	}
+
+	private function downloadAssetBundle(){
+		$results = \ORM::for_table("manifests")->whereLike("name", "%unity3d")->find_many();
+
+		foreach($results as $result){
+			if(file_exists($this->path . "assetbundle/" . $result->name)){
+				echo "Passed : " . $result->name . PHP_EOL;
+				continue;
+			}
+
+			$url = ManifestDB::getAssetBundleDirectory() . substr($result->hash, 0, 2) . "/" . $result->hash;
+
+			echo "Downloading : " . $result->name . PHP_EOL;
+			$this->getContents($url, $response, $info, "progressB");
+			$buffer = unity_lz4_uncompress($response);
+
+			echo PHP_EOL;
+
+			file_put_contents($this->path . "assetbundle/" . $result->name, $buffer);
 		}
 
 		return true;
