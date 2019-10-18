@@ -81,7 +81,7 @@ class AssetsDownloader{
 		$currentTimer = new Timer(time());
 		$totalTimer = new Timer(time());
 
-		$pathEntry = ["sounds/", "sounds/bgm/", "sounds/live/", "sounds/story/", "sounds/room/", "sounds/voice/", "sounds/se/", "assetbundle/"];
+		$pathEntry = ["sounds/", "sounds/bgm/", "sounds/live/", "sounds/story/", "sounds/room/", "sounds/voice/", "sounds/se/", "assetbundle/", "musicscore/"];
 		foreach($pathEntry as $entry){
 			if(!file_exists($this->path . $entry)){
 				$result = mkdir($this->path . $entry, $this->mode);
@@ -135,6 +135,11 @@ class AssetsDownloader{
 		echo sprintf($format, "Downloading AssetBundle...", $result[0], $result[1]);
 		sleep(3);
 		$this->downloadAssetBundle();
+
+		$result = $time();
+		echo sprintf($format, "Downloading Music Scores...", $result[0], $result[1]);
+		sleep(3);
+		$this->downloadMusicScore();
 
 		$result = $time();
 		echo sprintf($summary, "SUMMARY OF RESULTS", $result[1], $this->contentsCount, Metric::bytes($this->totalBytes)->format("GB/000"));
@@ -225,6 +230,24 @@ class AssetsDownloader{
 			echo PHP_EOL;
 
 			file_put_contents($this->path . "assetbundle/" . $result->name, $buffer);
+		}
+
+		return true;
+	}
+
+	private function downloadMusicScore(){
+		$results = \ORM::for_table("manifests")->whereLike("name", "musicscores%bdb")->find_many();
+
+		foreach($results as $result){
+			$url = ManifestDB::getBlobDBDirectory() . substr($result->hash, 0, 2) . "/" . $result->hash;
+
+			echo "Downloading : " . $result->name . PHP_EOL;
+			$this->getContents($url, $response, $info, "progressB");
+			$buffer = unity_lz4_uncompress($response);
+
+			echo PHP_EOL;
+
+			file_put_contents($this->path . "musicscore/" . $result->name, $buffer);
 		}
 
 		return true;
