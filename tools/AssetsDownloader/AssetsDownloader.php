@@ -81,7 +81,7 @@ class AssetsDownloader{
 		$currentTimer = new Timer(time());
 		$totalTimer = new Timer(time());
 
-		$pathEntry = ["sounds/", "sounds/bgm/", "sounds/live/", "sounds/story/", "sounds/room/", "sounds/voice/", "sounds/se/", "assetbundle/", "musicscore/"];
+		$pathEntry = ["sounds/", "sounds/bgm/", "sounds/live/", "sounds/story/", "sounds/room/", "sounds/voice/", "sounds/se/", "assetbundle/", "musicscore/", "extracted/"];
 		foreach($pathEntry as $entry){
 			if(!file_exists($this->path . $entry)){
 				$result = mkdir($this->path . $entry, $this->mode);
@@ -152,9 +152,22 @@ class AssetsDownloader{
 				$exploded = explode("/", $file);
 				$name = str_replace(".acb", "", end($exploded));
 				$path = str_replace($name . ".acb", "", $file);
+				$type = explode("/", $path)[2];
+
 				echo "Extracting : " . $name . PHP_EOL;
 				acbunpack($file);
-				hca2wav($path . "_acb_" . $name . "/" . $name . ".hca", "dl/" . $name . ".wav", CGSS_HCA_KEY_1, CGSS_HCA_KEY_2);
+
+				switch($type){
+					case "live":
+					case "bgm":
+						echo "Converting : " . $name . PHP_EOL;
+						hca2wav($path . "_acb_" . $name . "/" . $name . ".hca", "dl/extracted/" . $name . ".wav", CGSS_HCA_KEY_1, CGSS_HCA_KEY_2);
+						break;
+
+					default:
+						// TODO : acbunpacking only (room, se, story, voice)
+						break;
+				}
 			}
 		}
 	}
