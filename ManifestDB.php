@@ -9,7 +9,7 @@ class ManifestDB{
 	public const HTTP_SCHEME = "http://";
 	public const RESOURCE_SERVER_OLD = "storage.game.starlight-stage.jp/";
 	public const RESOURCE_SERVER = "asset-starlight-stage.akamaized.net/";
-    
+
 	public const DB_NAME = "manifest.db";
 	public const MANIFEST_TABLE = "manifests";
 	public const DL_ROOT = "dl/";

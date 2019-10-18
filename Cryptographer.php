@@ -10,7 +10,7 @@ class Cryptographer{
 			$str .= mt_rand(0, 9) . mt_rand(0, 9) . chr(ord($data[$i]) + 10) . mt_rand(0, 9);
 		}
 		return sprintf("%04x", strlen($data)) . $str .
-				mt_rand(1000000000, 9999999999) . mt_rand(1000000000, 9999999999) . mt_rand(100000000000, 999999999999);
+				mt_rand(10000000, 99999999) . mt_rand(10000000, 99999999);
 	}
 
 	public static function decode(string $data){
