@@ -81,7 +81,7 @@ class AssetsDownloader{
 		$currentTimer = new Timer(time());
 		$totalTimer = new Timer(time());
 
-		$pathEntry = ["sounds/", "sounds/bgm/", "sounds/live/", "sounds/story/", "sounds/room/", "sounds/voice/", "sounds/se/"];
+		$pathEntry = ["sounds/", "sounds/bgm/", "sounds/live/", "sounds/story/", "sounds/room/", "sounds/voice/", "sounds/se/", "assetbundle/", "musicscore/", "extracted/"];
 		foreach($pathEntry as $entry){
 			if(!file_exists($this->path . $entry)){
 				$result = mkdir($this->path . $entry, $this->mode);
@@ -116,7 +116,7 @@ class AssetsDownloader{
 		" Total Files : %d" . PHP_EOL .
 		" Total File Size : %s" . PHP_EOL .
 		str_repeat("=", 80) . PHP_EOL;
-		
+
 		$download = function(string $prefix, int $type) use ($format, $time){
 			$result = $time();
 			echo sprintf($format, sprintf("Downloading %s sonuds...", $prefix), $result[0], $result[1]);
@@ -132,6 +132,16 @@ class AssetsDownloader{
 		$download("se", ManifestDB::SOUND_SE);
 
 		$result = $time();
+		echo sprintf($format, "Downloading AssetBundle...", $result[0], $result[1]);
+		sleep(3);
+		$this->downloadAssetBundle();
+
+		$result = $time();
+		echo sprintf($format, "Downloading Music Scores...", $result[0], $result[1]);
+		sleep(3);
+		$this->downloadMusicScore();
+
+		$result = $time();
 		echo sprintf($summary, "SUMMARY OF RESULTS", $result[1], $this->contentsCount, Metric::bytes($this->totalBytes)->format("GB/000"));
 		echo "Successful!" . PHP_EOL;
 	}
@@ -142,9 +152,22 @@ class AssetsDownloader{
 				$exploded = explode("/", $file);
 				$name = str_replace(".acb", "", end($exploded));
 				$path = str_replace($name . ".acb", "", $file);
+				$type = explode("/", $path)[2];
+
 				echo "Extracting : " . $name . PHP_EOL;
 				acbunpack($file);
-				hca2wav($path . "_acb_" . $name . "/" . $name . ".hca", "dl/" . $name . ".wav", CGSS_HCA_KEY_1, CGSS_HCA_KEY_2);
+
+				switch($type){
+					case "live":
+					case "bgm":
+						echo "Converting : " . $name . PHP_EOL;
+						hca2wav($path . "_acb_" . $name . "/" . $name . ".hca", "dl/extracted/" . $name . ".wav", CGSS_HCA_KEY_1, CGSS_HCA_KEY_2);
+						break;
+
+					default:
+						// TODO : acbunpacking only (room, se, story, voice)
+						break;
+				}
 			}
 		}
 	}
@@ -197,6 +220,47 @@ class AssetsDownloader{
 			echo PHP_EOL;
 
 			file_put_contents($this->path . $dir . $name, $response);
+		}
+
+		return true;
+	}
+
+	private function downloadAssetBundle(){
+		$results = \ORM::for_table("manifests")->whereLike("name", "%unity3d")->find_many();
+
+		foreach($results as $result){
+			if(file_exists($this->path . "assetbundle/" . $result->name)){
+				echo "Passed : " . $result->name . PHP_EOL;
+				continue;
+			}
+
+			$url = ManifestDB::getAssetBundleDirectory() . substr($result->hash, 0, 2) . "/" . $result->hash;
+
+			echo "Downloading : " . $result->name . PHP_EOL;
+			$this->getContents($url, $response, $info, "progressB");
+			$buffer = unity_lz4_uncompress($response);
+
+			echo PHP_EOL;
+
+			file_put_contents($this->path . "assetbundle/" . $result->name, $buffer);
+		}
+
+		return true;
+	}
+
+	private function downloadMusicScore(){
+		$results = \ORM::for_table("manifests")->whereLike("name", "musicscores%bdb")->find_many();
+
+		foreach($results as $result){
+			$url = ManifestDB::getBlobDBDirectory() . substr($result->hash, 0, 2) . "/" . $result->hash;
+
+			echo "Downloading : " . $result->name . PHP_EOL;
+			$this->getContents($url, $response, $info, "progressB");
+			$buffer = unity_lz4_uncompress($response);
+
+			echo PHP_EOL;
+
+			file_put_contents($this->path . "musicscore/" . $result->name, $buffer);
 		}
 
 		return true;
