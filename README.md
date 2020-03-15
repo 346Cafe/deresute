@@ -1,5 +1,5 @@
 # deresute
-![banner](https://is4-ssl.mzstatic.com/image/thumb/Purple118/v4/e2/f6/f4/e2f6f484-25dc-6318-fda5-b5ff4a88d371/source/1920x1080bb.jpg)
+![banner](https://is2-ssl.mzstatic.com/image/thumb/Purple113/v4/70/df/b2/70dfb280-6f72-9894-90d6-1a23ab8159d9/pr_source.png/1920x1080bb.png)
 
 [![GitHub license](https://img.shields.io/github/license/346Cafe/deresute.svg?style=for-the-badge)](https://github.com/346Cafe/deresute/blob/master/LICENSE)
 [![GitHub forks](https://img.shields.io/github/forks/346Cafe/deresute.svg?style=for-the-badge)](https://github.com/346Cafe/deresute/network)
@@ -12,28 +12,41 @@
 [![Packagist download](https://img.shields.io/packagist/dt/towa0131/deresute.svg?style=for-the-badge)](https://packagist.org/packages/towa0131/deresute)
 
 ## deresuteについて
-**deresute**はCGSS API / CGSS AssetBundle ToolのPHP用ライブラリです。
+**deresute**はCGSS API / AssetBundle ToolのPHP用ライブラリです。
 
-## セットアップ
-### unitylz4のコンパイル
-- php-unity-lz4をGitHubからクローン
+## モジュールのセットアップ
+### php-unitylz4のコンパイル
+- php-unity-lz4をGitからクローン
 ```
 $ git clone https://github.com/towa0131/php-unity-lz4
 $ cd php-unity-lz4
 ```
 
-- コンパイル/インストールを実行
+- コンパイル及びインストールを実行
 ```
 $ ./install.sh
 ```
 
-これでエクステンションがインストールされるので`php.ini`ファイルに`extension=unitylz4`を追加し、エクステンションを有効化してください。
+### php-cgssのコンパイル
+- php-cgssをGitからクローン
+```
+# サブモジュールも同時にクローン
+$ git clone --recursive https://github.com/towa0131/php-cgss
+$ cd php-cgss
+$ phpize
+$ ./configure
+
+# インストール
+$ make install
+```
+
+エクステンションがインストールされるので`php.ini`ファイルに`extension=unitylz4`, `extension=cgss`を追加し、エクステンションを有効化してください。
 
 ### deresute本体のセットアップ
 ***下記のいずれかの方法でインストールが可能です。***
 
-#### GitHubからダウンロード
-- **deresute**をGitHubからクローン
+#### Gitからダウンロード
+- **deresute**をGitからクローン
 ```
 $ git clone https://github.com/346Cafe/deresute
 $ cd deresute
@@ -61,7 +74,7 @@ $ php composer.phar require towa0131/deresute
 ```
 
 ### テストの実行
-- #### GitHubからダウンロードした場合
+- #### Gitからダウンロードした場合
 ```
 $ php test-app.php
 ```
@@ -70,20 +83,38 @@ $ php test-app.php
 $ php vendor/towa0131/deresute/test-app.php
 ```
 
+## 機能
+### 音声ファイル/アセットバンドルのダウンロード
+**deresute**の機能の一つとして、音声ファイル、アセットバンドルのダウンロード機能があります。
+```
+$ cd tools/AssetDownloader/
+$ php app.php
+```
+音声ファイルはすべてのファイルのダウンロード完了後、自動でWAVEフォーマットに変換されます。
+
+## 追加予定の機能
+- アカウントの作成機能
+    - 正規クライアントへのアカウントの引継ぎ
+- ダウンロードするデータをユーザが指定可能にする
+
 ## FAQ
 ### unitylz4のコンパイルでエラー
 既にmakeやg++などのインストールはされていますか？
 もしされていないならコンパイルの前にインストールを行なってください。
 
 ### 本体のAPIの使用時にエラー
-必要なエクステンションがインストールされていない可能性があります。一度、`php test-app.php`でテストスクリプトを実行し、エラーが出ないか確認してください。
+必要なエクステンションがインストールされていない可能性があります。一度、`php test-app.php`でテストスクリプトを実行し、エラーが発生しないか確認してください。
 
 ### test-app.phpの実行時にエラー
 `No module loaded : msgpack`などの文が表示されていませんか？
-もしされているのならば、**deresute**の使用に必要なエクステンションがインストールされていません。インストールを行うことでエラーが表示されなくなります。
+もしされているのならば、**deresute**の使用に必要なエクステンションがインストールされていません。インストールを行うことでエラーが発生しなくなります。
+
+### わからないことがあれば
+お気軽に[Issues](https://github.com/346Cafe/deresute/issues)、[Twitter](https://twitter.com/usaminium)にてご質問お願いします。
 
 ## 使用しているライブラリ
-- [towa0131/unity-lz4](https://github.com/towa0131/php-unity-lz4) - unity3d.lz4フォーマットを扱うPHPエクステンション
+- [towa0131/php-unity-lz4](https://github.com/towa0131/php-unity-lz4) - unity3d.lz4フォーマットを扱うPHPエクステンション
+- [towa0131/php-cgss](https://github.com/towa0131/php-cgss) - ACBファイルの展開、HCAファイルのデコードを行うPHPエクステンション
 - [phpseclib/mcrypt_compat](https://github.com/phpseclib/mcrypt_compat) - データの暗号化 / 復号化を行うライブラリ
-- [gabrielelana/byte-units](https://github.com/gabrielelana/byte-units) - バイト数値をパース / 変換するためのライブラリ
+- [gabrielelana/byte-units](https://github.com/gabrielelana/byte-units) - バイト数値をパースするためのライブラリ
 - [j4mie/idiorm](https://github.com/j4mie/idiorm) - ORMを扱うライブラリ
