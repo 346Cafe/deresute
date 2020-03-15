@@ -14,7 +14,7 @@
 ## deresuteについて
 **deresute**はCGSS API / AssetBundle ToolのPHP用ライブラリです。
 
-## モジュールのセットアップ
+## セットアップ
 ### php-unitylz4のコンパイル
 - php-unity-lz4をGitからクローン
 ```
