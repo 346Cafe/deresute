@@ -4,12 +4,12 @@ namespace towa0131\deresute\tools\AssetsDownloader;
 
 use ByteUnits\Metric;
 
-class ProgressBar{
+class ProgressBar {
 
 	public const FORMAT_CURL = 0;
 
-	public static function directPrint(int $current, int $max, int $format, ...$additionalData){
-		if($current <= 0 || $max <= 0){
+	public static function directPrint(int $current, int $max, int $format, ...$additionalData) {
+		if ($current <= 0 || $max <= 0) {
 			return false;
 		}
 
@@ -30,4 +30,5 @@ class ProgressBar{
 
 		return true;
 	}
+
 }

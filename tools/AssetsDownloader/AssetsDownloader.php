@@ -7,7 +7,7 @@ use towa0131\deresute\ManifestDB;
 
 use ByteUnits\Metric;
 
-class AssetsDownloader{
+class AssetsDownloader {
 
 	private $path = __DIR__ . "/dl/";
 	private $header = [];
@@ -16,7 +16,7 @@ class AssetsDownloader{
 	private $contentsCount = 0;
 	private $totalBytes = 0;
 
-	public function __construct(string $path = __DIR__ . "/dl/", array $header, int $mode = 0777){
+	public function __construct(string $path = __DIR__ . "/dl/", array $header, int $mode = 0777) {
 		$this->path = $path;
 		$this->header = $header;
 		$this->mode = $mode;
@@ -24,11 +24,11 @@ class AssetsDownloader{
 		$this->createDirectory();
 	}
 
-	public function downloadManifest(int $resver){
+	public function downloadManifest(int $resver) {
 		$url = ManifestDB::getManifestsDirectory($resver) . "Android_AHigh_SHigh";
 		$this->getContents($url, $response, $info);
 
-		if($info["http_code"] === 200){
+		if ($info["http_code"] === 200) {
 			echo PHP_EOL;
 			echo "Successfully download manifest" . PHP_EOL;
 			file_put_contents($this->path . "manifest_" . $resver, $response);
@@ -40,7 +40,7 @@ class AssetsDownloader{
 			\ORM::configure("sqlite:" . $this->path . "manifest.db");
 
 			echo "Successful!" . PHP_EOL;
-		}else{
+		} else {
 			echo "Error! HttpCode : " . $info["http_code"] . PHP_EOL;
 			return false;
 		}
@@ -48,7 +48,7 @@ class AssetsDownloader{
 		return true;
 	}
 
-	public function downloadMaster(){
+	public function downloadMaster() {
 		$this->checkDB();
 
 		$result = \ORM::for_table("manifests")->where("name", "master.mdb")->find_one();
@@ -57,7 +57,7 @@ class AssetsDownloader{
 		$url = ManifestDB::getMasterDBDirectory() . substr($hash, 0, 2) . "/" . $hash;
 		$this->getContents($url, $response, $info);
 
-		if($info["http_code"] === 200){
+		if ($info["http_code"] === 200) {
 			echo PHP_EOL;
 			echo "Successfully download master" . PHP_EOL;
 			file_put_contents($this->path . "master.mdb", $response);
@@ -67,7 +67,7 @@ class AssetsDownloader{
 			file_put_contents($this->path . "master.db", $buffer);
 
 			echo "Successful!" . PHP_EOL;
-		}else{
+		} else {
 			echo "Error! HttpCode : " . $info["http_code"] . PHP_EOL;
 			return false;
 		}
@@ -75,24 +75,24 @@ class AssetsDownloader{
 		return true;
 	}
 
-	public function downloadAssets(){
+	public function downloadAssets() {
 		$this->checkDB();
 
 		$currentTimer = new Timer(time());
 		$totalTimer = new Timer(time());
 
 		$pathEntry = ["sounds/", "sounds/bgm/", "sounds/live/", "sounds/story/", "sounds/room/", "sounds/voice/", "sounds/se/", "assetbundle/", "musicscore/", "extracted/"];
-		foreach($pathEntry as $entry){
-			if(!file_exists($this->path . $entry)){
+		foreach ($pathEntry as $entry) {
+			if (!file_exists($this->path . $entry)) {
 				$result = mkdir($this->path . $entry, $this->mode);
-				if(!$result){
+				if (!$result) {
 					echo "Failed to create " . $this->path . $entry . "directory";
 					exit(1);
 				}
 			}
 		}
 
-		$time = function() use (&$currentTimer, &$totalTimer){
+		$time = function() use (&$currentTimer, &$totalTimer) {
 			$time = time();
 			$diff = $currentTimer->diff($time);
 			$currentTimer->set($time);
@@ -117,7 +117,7 @@ class AssetsDownloader{
 		" Total File Size : %s" . PHP_EOL .
 		str_repeat("=", 80) . PHP_EOL;
 
-		$download = function(string $prefix, int $type) use ($format, $time){
+		$download = function(string $prefix, int $type) use ($format, $time) {
 			$result = $time();
 			echo sprintf($format, sprintf("Downloading %s sonuds...", $prefix), $result[0], $result[1]);
 			sleep(3);
@@ -146,9 +146,9 @@ class AssetsDownloader{
 		echo "Successful!" . PHP_EOL;
 	}
 
-	public function extractAssets(){
-		foreach(glob("dl/sounds/*/*.acb", GLOB_BRACE) as $file){
-			if(is_file($file)){
+	public function extractAssets() {
+		foreach (glob("dl/sounds/*/*.acb", GLOB_BRACE) as $file) {
+			if (is_file($file)) {
 				$exploded = explode("/", $file);
 				$name = str_replace(".acb", "", end($exploded));
 				$path = str_replace($name . ".acb", "", $file);
@@ -172,7 +172,7 @@ class AssetsDownloader{
 		}
 	}
 
-	private function downloadSounds(int $type = ManifestDB::SOUND_BGM){
+	private function downloadSounds(int $type = ManifestDB::SOUND_BGM) {
 		switch($type){
 			case ManifestDB::SOUND_BGM:
 				$index = "b/";
@@ -210,7 +210,7 @@ class AssetsDownloader{
 
 		$results = \ORM::for_table("manifests")->whereLike("name", $index . "%acb")->find_many();
 
-		foreach($results as $result){
+		foreach ($results as $result) {
 			$name = str_replace($index, "", $result->name);
 			$url = ManifestDB::getSoundDirectory() . substr($result->hash, 0, 2) . "/" . $result->hash;
 
@@ -225,11 +225,11 @@ class AssetsDownloader{
 		return true;
 	}
 
-	private function downloadAssetBundle(){
+	private function downloadAssetBundle() {
 		$results = \ORM::for_table("manifests")->whereLike("name", "%unity3d")->find_many();
 
-		foreach($results as $result){
-			if(file_exists($this->path . "assetbundle/" . $result->name)){
+		foreach ($results as $result) {
+			if (file_exists($this->path . "assetbundle/" . $result->name)) {
 				echo "Passed : " . $result->name . PHP_EOL;
 				continue;
 			}
@@ -248,10 +248,10 @@ class AssetsDownloader{
 		return true;
 	}
 
-	private function downloadMusicScore(){
+	private function downloadMusicScore() {
 		$results = \ORM::for_table("manifests")->whereLike("name", "musicscores%bdb")->find_many();
 
-		foreach($results as $result){
+		foreach ($results as $result) {
 			$url = ManifestDB::getBlobDBDirectory() . substr($result->hash, 0, 2) . "/" . $result->hash;
 
 			echo "Downloading : " . $result->name . PHP_EOL;
@@ -266,31 +266,32 @@ class AssetsDownloader{
 		return true;
 	}
 
-	private function createDirectory(){
-		if(!file_exists($this->path)){
+	private function createDirectory() {
+		if (!file_exists($this->path)) {
 			$result = mkdir($this->path, 0777);
-			if(!$result){
+			if (!$result) {
 				echo "Failed to create " . $this->path . " directory";
 				exit(1);
 			}
 		}
 	}
 
-	private function checkDB(bool $shutdown = true){
-		try{
+	private function checkDB(bool $shutdown = true) {
+		try {
 			\ORM::for_table("manifests")->find_many();
-		}catch(\PDOException $exception){
-			if($shutdown){
+		} catch (\PDOException $exception){
+			if ($shutdown) {
 				echo "Error! DB was not found" . PHP_EOL;
 				exit(1);
 			}
 
 			return false;
 		}
+
 		return true;
 	}
 
-	private function getContents(string $url, &$response, &$info, string $progress = "progressA", int $timeout = 30){
+	private function getContents(string $url, &$response, &$info, string $progress = "progressA", int $timeout = 30) {
 		$curl = curl_init();
 		curl_setopt_array($curl, [
 		CURLOPT_URL => $url,
@@ -301,7 +302,7 @@ class AssetsDownloader{
 		CURLOPT_ENCODING => "gzip",
 		CURLOPT_TIMEOUT => $timeout,
 		CURLOPT_NOPROGRESS => false,
-		CURLOPT_PROGRESSFUNCTION => function($curl, $downloadSize, $downloaded, $uploadSize, $uploaded) use ($progress){
+		CURLOPT_PROGRESSFUNCTION => function($curl, $downloadSize, $downloaded, $uploadSize, $uploaded) use ($progress) {
 			$this->$progress($curl, $downloadSize, $downloaded, $uploadSize, $uploaded);
 		}
 		]);
@@ -314,13 +315,13 @@ class AssetsDownloader{
 		curl_close($curl);
 	}
 
-	private function progressA($curl, int $downloadSize, int $downloaded, int $uploadSize, int $uploaded){
-		if($downloadSize <= 0){
+	private function progressA($curl, int $downloadSize, int $downloaded, int $uploadSize, int $uploaded) {
+		if ($downloadSize <= 0) {
 			return false;
 		}
 
 		$info = curl_getinfo($curl);
-		if($info["http_code"] !== 200){
+		if ($info["http_code"] !== 200) {
 			echo "Error! HttpCode : " . $info["http_code"] . PHP_EOL;
 			countinue;
 		}
@@ -331,8 +332,8 @@ class AssetsDownloader{
 		return true;
 	}
 
-	private function progressB($curl, int $downloadSize, int $downloaded, int $uploadSize, int $uploaded){
-		if($downloadSize <= 0){
+	private function progressB($curl, int $downloadSize, int $downloaded, int $uploadSize, int $uploaded) {
+		if ($downloadSize <= 0) {
 			return false;
 		}
 
@@ -340,4 +341,5 @@ class AssetsDownloader{
 
 		return true;
 	}
+
 }
