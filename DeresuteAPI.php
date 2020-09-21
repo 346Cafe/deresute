@@ -4,7 +4,7 @@ namespace towa0131\deresute;
 
 use towa0131\deresute\Cryptographer;
 
-class DeresuteAPI{
+class DeresuteAPI {
 
 	public const BASE_URL = "https://apis.game.starlight-stage.jp";
 
@@ -21,7 +21,7 @@ class DeresuteAPI{
 
 	protected $sid = "";
 
-	public function __construct(string $udid, int $viewerId, int $userId){
+	public function __construct(string $udid, int $viewerId, int $userId) {
 		ini_set("msgpack.use_str8_serialization", 0); // Enable compatibility mode
 
 		$this->udid = $udid;
@@ -34,19 +34,21 @@ class DeresuteAPI{
 	 * Core API
 	 */
 
-	private function encrypt256(string $data = "", string $key, string $iv) : string{
+	private function encrypt256(string $data = "", string $key, string $iv) : string {
 		$padding = 16 - (strlen($data) % 16);
 		$data .= str_repeat(chr($padding), $padding);
+
 		return mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $data, MCRYPT_MODE_CBC, $iv);
 	}
 
-	private function decrypt256(string $data = "", string $key, string $iv) : string{
+	private function decrypt256(string $data = "", string $key, string $iv) : string {
 		$data = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $data, MCRYPT_MODE_CBC, $iv);
 		$padding = ord($data[strlen($data) - 1]);
+
 		return substr($data, 0, -$padding);
 	}
 
-	public function run(array $args, string $endpoint) : array{
+	public function run(array $args, string $endpoint) : array {
 		$vid_iv = mt_rand(10000000, 99999999) . mt_rand(10000000, 99999999);
 		$args["timezone"] = "09:00:00";
 		$args["viewer_id"] = $vid_iv . base64_encode($this->encrypt256((string)$this->viewerId, self::VIEWER_ID_KEY, $vid_iv));
@@ -95,9 +97,9 @@ class DeresuteAPI{
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING => "gzip, deflate"
 		]);
+
 		$response = curl_exec($curl);
 		curl_close($curl);
-
 		unset($curl);
 
 		$response = base64_decode($response);
@@ -107,26 +109,26 @@ class DeresuteAPI{
 		$plain = $this->decrypt256($data, $key, $msg_iv);
 		$result = msgpack_unpack(base64_decode($plain));
 
-		if(isset($result["data_headers"]["sid"]) && !empty($result["data_headers"]["sid"])){
+		if (isset($result["data_headers"]["sid"]) && !empty($result["data_headers"]["sid"])) {
 			$this->sid = $result["data_headers"]["sid"];
 		}
 
 		return $result;
 	}
 
-	public function getUdid() : string{
+	public function getUdid() : string {
 		return $this->udid;
 	}
 
-	public function getViewerId() : int{
+	public function getViewerId() : int {
 		return $this->viewerId;
 	}
 
-	public function getUserId() : int{
+	public function getUserId() : int {
 		return $this->userId;
 	}
 
-	public static function generateHeader(string $host) : array{
+	public static function generateHeader(string $host) : array {
 		$header = [
 			"APP-VER: " . self::APP_VER,
 			"RES-VER: " . self::RES_VER,
@@ -139,11 +141,7 @@ class DeresuteAPI{
 		return $header;
 	}
 
-	/**
-	 * Public API
-	 */
-
-	public function createNewAccount() : bool{
+	public function createNewAccount() : bool {
 		$args = [
 			"device_name" => "Nexus 42",
 			"client_type" => "1",
@@ -151,9 +149,10 @@ class DeresuteAPI{
 			"app_version" => self::APP_VER,
 			"resource_version" => "Android OS 13.3.7 / API-42 (XYZZ1Y/74726f6c6c)"
 		];
+
 		$result = $this->run($args, "/tool/signup");
 
-		if($result["data_headers"]["result_code"] == 1){
+		if ($result["data_headers"]["result_code"] == 1) {
 			$this->viewerId = $result["data_headers"]["viewer_id"];
 			$this->userId = $result["data_headers"]["user_id"];
 			$this->sid = $result["data_headers"]["sid"];
@@ -163,4 +162,5 @@ class DeresuteAPI{
 
 		return false;
 	}
+
 }

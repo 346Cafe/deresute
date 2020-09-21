@@ -4,7 +4,7 @@ namespace towa0131\deresute;
 
 use towa0131\deresute\Cryptographer;
 
-class ManifestDB{
+class ManifestDB {
 
 	public const HTTP_SCHEME = "http://";
 	public const RESOURCE_SERVER_OLD = "storage.game.starlight-stage.jp/";
@@ -36,39 +36,39 @@ class ManifestDB{
 	public const SOUND_VOICE = 5;
 	public const SOUND_SE = 6;
 
-	public static function getAssetBundleDirectory() : string{
+	public static function getAssetBundleDirectory() : string {
 		return self::getResourceServerURL() . self::DL_ROOT . self::RESOURCES_DIR . self::ASSETS_DIR;
 	}
 
-	public static function getManifestsDirectory(string $resVer) : string{
+	public static function getManifestsDirectory(string $resVer) : string {
 		return self::getResourceServerURL() . self::DL_ROOT . $resVer . "/" . self::MANIFESTS_DIR;
 	}
 
-	public static function getSoundDirectory() : string{
+	public static function getSoundDirectory() : string {
 		return self::getResourceServerURL() . self::DL_ROOT . self::RESOURCES_DIR . self::SOUND_DIR;
 	}
 
-	public static function getMovieDirectory(string $resVer) : string{
+	public static function getMovieDirectory(string $resVer) : string {
 		return self::getResourceServerURL() . self::DL_ROOT . $resVer . "/" . self::MOVIE_DIR . self::getPlatformDirectory();
 	}
 
-	public static function getBlobDBDirectory() : string{
+	public static function getBlobDBDirectory() : string {
 		return self::getResourceServerURL(). self::DL_ROOT . self::RESOURCES_DIR . self::GENERIC_DIR;
 	}
 
-	public static function getMasterDBDirectory() : string{
+	public static function getMasterDBDirectory() : string {
 		return self::getResourceServerURL(). self::DL_ROOT . self::RESOURCES_DIR . self::GENERIC_DIR;
 	}
 
-	public static function getScheme() : string{
+	public static function getScheme() : string {
 		return self::HTTP_SCHEME;
 	}
 
-	public static function getResourceServerURL() : string{
+	public static function getResourceServerURL() : string {
 		return self::getScheme() . self::RESOURCE_SERVER;
 	}
 
-	public static function getQualityDirectory(int $type = 0) : string{
+	public static function getQualityDirectory(int $type = 0) : string {
 		switch($type){
 			case 0: // Quality: High
 				return self::QUALITY_HIGH_DIR;
@@ -82,7 +82,7 @@ class ManifestDB{
 		}
 	}
 
-	public static function getPlatformDirectory(int $type = 0) : string{
+	public static function getPlatformDirectory(int $type = 0) : string {
 		switch($type){
 			case 0: // Platform: Android
 				return self::PLATFORM_ANDROID_DIR;
@@ -98,4 +98,5 @@ class ManifestDB{
 				break;
 		}
 	}
+
 }
