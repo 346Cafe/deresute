@@ -8,8 +8,8 @@ class DeresuteAPI
 {
 	public const BASE_URL = "https://apis.game.starlight-stage.jp";
 
-	public const RES_VER = 10061600;
-	public const APP_VER = "5.2.5";
+	public const RES_VER = 10075800;
+	public const APP_VER = "6.2.0";
 	public const WC_VER = "2018.3.8f1";
 
 	public const VIEWER_ID_KEY = "s%5VNQ(H$&Bqb6#3+78h29!Ft4wSg)ex";
