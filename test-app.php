@@ -1,7 +1,7 @@
 <?php
 
-namespace towa0131\deresute{
-
+namespace towa0131\deresute
+{
 	require_once "./vendor/autoload.php";
 
 	use towa0131\deresute\TestAPI;
@@ -45,16 +45,15 @@ namespace towa0131\deresute{
 	echo sprintf($titleFormat, "TIME RESULT");
 	echo sprintf($format, "Time taken", $time);
 
-	function getResult($result, &$successful, &$failed, &$warning){
-		switch($result){
+	function getResult($result, &$successful, &$failed, &$warning): void
+	{
+		switch ($result) {
 			case TestAPI::TEST_ERROR:
 				$failed++;
 				break;
-
 			case TestAPI::TEST_OK:
 				$successful++;
 				break;
-
 			case TestAPI::TEST_WARNING:
 				$warning++;
 				break;
