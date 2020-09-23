@@ -4,18 +4,19 @@ namespace towa0131\deresute\tools\AssetsDownloader;
 
 use ByteUnits\Metric;
 
-class ProgressBar {
-
+class ProgressBar
+{
 	public const FORMAT_CURL = 0;
 
-	public static function directPrint(int $current, int $max, int $format, ...$additionalData) {
+	public static function directPrint(int $current, int $max, int $format, ...$additionalData): bool
+	{
 		if ($current <= 0 || $max <= 0) {
 			return false;
 		}
 
 		$percent = floor($current / $max * 100);
 
-		switch($format){
+		switch ($format) {
 			case self::FORMAT_CURL:
 				$currentMB = Metric::bytes($current)->format("mB/000");
 				$maxMB = Metric::bytes($max)->format("mB/000");
@@ -30,5 +31,4 @@ class ProgressBar {
 
 		return true;
 	}
-
 }

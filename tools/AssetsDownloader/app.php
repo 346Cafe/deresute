@@ -1,7 +1,7 @@
 <?php
 
-namespace towa0131\deresute\tools\AssetsDownloader {
-
+namespace towa0131\deresute\tools\AssetsDownloader
+{
 	require_once __DIR__ . "/../../vendor/autoload.php";
 
 	use towa0131\deresute\DeresuteAPI;
@@ -27,5 +27,4 @@ namespace towa0131\deresute\tools\AssetsDownloader {
 
 	echo "Extracting Assets..." . PHP_EOL;
 	$downloader->extractAssets();
-	
 }

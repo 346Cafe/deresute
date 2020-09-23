@@ -7,8 +7,8 @@ use towa0131\deresute\ManifestDB;
 
 use ByteUnits\Metric;
 
-class AssetsDownloader {
-
+class AssetsDownloader
+{
 	private $path = __DIR__ . "/dl/";
 	private $header = [];
 	private $mode = 0777;
@@ -16,7 +16,8 @@ class AssetsDownloader {
 	private $contentsCount = 0;
 	private $totalBytes = 0;
 
-	public function __construct(string $path = __DIR__ . "/dl/", array $header, int $mode = 0777) {
+	public function __construct(string $path = __DIR__ . "/dl/", array $header, int $mode = 0777)
+	{
 		$this->path = $path;
 		$this->header = $header;
 		$this->mode = $mode;
@@ -24,7 +25,8 @@ class AssetsDownloader {
 		$this->createDirectory();
 	}
 
-	public function downloadManifest(int $resver) {
+	public function downloadManifest(int $resver): bool
+	{
 		$url = ManifestDB::getManifestsDirectory($resver) . "Android_AHigh_SHigh";
 		$this->getContents($url, $response, $info);
 
@@ -48,7 +50,8 @@ class AssetsDownloader {
 		return true;
 	}
 
-	public function downloadMaster() {
+	public function downloadMaster(): bool
+	{
 		$this->checkDB();
 
 		$result = \ORM::for_table("manifests")->where("name", "master.mdb")->find_one();
@@ -75,7 +78,8 @@ class AssetsDownloader {
 		return true;
 	}
 
-	public function downloadAssets() {
+	public function downloadAssets(): void
+	{
 		$this->checkDB();
 
 		$currentTimer = new Timer(time());
@@ -92,7 +96,7 @@ class AssetsDownloader {
 			}
 		}
 
-		$time = function() use (&$currentTimer, &$totalTimer) {
+		$time = function () use (&$currentTimer, &$totalTimer) {
 			$time = time();
 			$diff = $currentTimer->diff($time);
 			$currentTimer->set($time);
@@ -117,7 +121,7 @@ class AssetsDownloader {
 		" Total File Size : %s" . PHP_EOL .
 		str_repeat("=", 80) . PHP_EOL;
 
-		$download = function(string $prefix, int $type) use ($format, $time) {
+		$download = function (string $prefix, int $type) use ($format, $time) {
 			$result = $time();
 			echo sprintf($format, sprintf("Downloading %s sonuds...", $prefix), $result[0], $result[1]);
 			sleep(3);
@@ -146,7 +150,8 @@ class AssetsDownloader {
 		echo "Successful!" . PHP_EOL;
 	}
 
-	public function extractAssets() {
+	public function extractAssets(): void
+	{
 		foreach (glob("dl/sounds/*/*.acb", GLOB_BRACE) as $file) {
 			if (is_file($file)) {
 				$exploded = explode("/", $file);
@@ -157,7 +162,7 @@ class AssetsDownloader {
 				echo "Extracting : " . $name . PHP_EOL;
 				acbunpack($file);
 
-				switch($type){
+				switch ($type) {
 					case "live":
 					case "bgm":
 						echo "Converting : " . $name . PHP_EOL;
@@ -172,38 +177,33 @@ class AssetsDownloader {
 		}
 	}
 
-	private function downloadSounds(int $type = ManifestDB::SOUND_BGM) {
-		switch($type){
+	private function downloadSounds(int $type = ManifestDB::SOUND_BGM): bool
+	{
+		switch ($type) {
 			case ManifestDB::SOUND_BGM:
 				$index = "b/";
 				$dir = "sounds/bgm/";
 				break;
-
 			case ManifestDB::SOUND_LIVE:
 				$index = "l/";
 				$dir = "sounds/live/";
 				break;
-
 			case ManifestDB::SOUND_STORY:
 				$index = "c/";
 				$dir = "sounds/story/";
 				break;
-
 			case ManifestDB::SOUND_ROOM:
 				$index = "r/";
 				$dir = "sounds/room/";
 				break;
-
 			case ManifestDB::SOUND_VOICE:
 				$index = "v/";
 				$dir = "sounds/voice/";
 				break;
-
 			case ManifestDB::SOUND_SE:
 				$index = "s/";
 				$dir = "sounds/se/";
 				break;
-
 			default:
 				return false;
 		}
@@ -225,7 +225,8 @@ class AssetsDownloader {
 		return true;
 	}
 
-	private function downloadAssetBundle() {
+	private function downloadAssetBundle(): bool
+	{
 		$results = \ORM::for_table("manifests")->whereLike("name", "%unity3d")->find_many();
 
 		foreach ($results as $result) {
@@ -248,7 +249,8 @@ class AssetsDownloader {
 		return true;
 	}
 
-	private function downloadMusicScore() {
+	private function downloadMusicScore(): bool
+	{
 		$results = \ORM::for_table("manifests")->whereLike("name", "musicscores%bdb")->find_many();
 
 		foreach ($results as $result) {
@@ -266,7 +268,8 @@ class AssetsDownloader {
 		return true;
 	}
 
-	private function createDirectory() {
+	private function createDirectory(): void
+	{
 		if (!file_exists($this->path)) {
 			$result = mkdir($this->path, 0777);
 			if (!$result) {
@@ -276,22 +279,23 @@ class AssetsDownloader {
 		}
 	}
 
-	private function checkDB(bool $shutdown = true) {
+	private function checkDB(bool $shutdown = true): bool
+	{
 		try {
 			\ORM::for_table("manifests")->find_many();
-		} catch (\PDOException $exception){
+		} catch (\PDOException $exception) {
 			if ($shutdown) {
 				echo "Error! DB was not found" . PHP_EOL;
 				exit(1);
 			}
-
 			return false;
 		}
 
 		return true;
 	}
 
-	private function getContents(string $url, &$response, &$info, string $progress = "progressA", int $timeout = 30) {
+	private function getContents(string $url, &$response, &$info, string $progress = "progressA", int $timeout = 30): void
+	{
 		$curl = curl_init();
 		curl_setopt_array($curl, [
 		CURLOPT_URL => $url,
@@ -302,7 +306,7 @@ class AssetsDownloader {
 		CURLOPT_ENCODING => "gzip",
 		CURLOPT_TIMEOUT => $timeout,
 		CURLOPT_NOPROGRESS => false,
-		CURLOPT_PROGRESSFUNCTION => function($curl, $downloadSize, $downloaded, $uploadSize, $uploaded) use ($progress) {
+		CURLOPT_PROGRESSFUNCTION => function ($curl, $downloadSize, $downloaded, $uploadSize, $uploaded) use ($progress) {
 			$this->$progress($curl, $downloadSize, $downloaded, $uploadSize, $uploaded);
 		}
 		]);
@@ -315,7 +319,8 @@ class AssetsDownloader {
 		curl_close($curl);
 	}
 
-	private function progressA($curl, int $downloadSize, int $downloaded, int $uploadSize, int $uploaded) {
+	private function progressA($curl, int $downloadSize, int $downloaded, int $uploadSize, int $uploaded): bool
+	{
 		if ($downloadSize <= 0) {
 			return false;
 		}
@@ -332,7 +337,8 @@ class AssetsDownloader {
 		return true;
 	}
 
-	private function progressB($curl, int $downloadSize, int $downloaded, int $uploadSize, int $uploaded) {
+	private function progressB($curl, int $downloadSize, int $downloaded, int $uploadSize, int $uploaded): bool
+	{
 		if ($downloadSize <= 0) {
 			return false;
 		}
@@ -341,5 +347,4 @@ class AssetsDownloader {
 
 		return true;
 	}
-
 }
