@@ -46,6 +46,7 @@ $ make
 例 :
 ```
 $ export LD_LIBRARY_PATH=/php-cgss/libcgss/bin/x64/
+$ ldconfig
 ```
 
 - php-cgssをコンパイル
