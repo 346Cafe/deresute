@@ -43,9 +43,10 @@ $ make
 
 `bin/x64/`下にある`libcgss.so.*`ファイルを共有ライブラリへパスを通してください。
 
-例 :
+例 (`libcgss.so`が`/root/php-cgss/libcgss/bin/x64/`にある場合):
 ```
-$ export LD_LIBRARY_PATH=/php-cgss/libcgss/bin/x64/
+$ touch /etc/ld.so.conf.d/cgss.so.conf
+$ echo "/root/php-cgss/libcgss/bin/x64/" >> /etc/ld.so.conf.d/cgss.so.conf
 $ ldconfig
 ```
 
