@@ -33,6 +33,25 @@ $ ./install.sh
 # サブモジュールも同時にクローン
 $ git clone --recursive https://github.com/towa0131/php-cgss
 $ cd php-cgss
+```
+- libcgssをコンパイル
+```
+$ cd libcgss
+$ cmake .
+$ make
+```
+
+`bin/x64/`下にある`libcgss.so.*`ファイルを共有ライブラリへパスを通してください。
+
+例 :
+```
+$ export LD_LIBRARY_PATH=/php-cgss/libcgss/bin/x64/
+```
+
+- php-cgssをコンパイル
+
+```
+$ cd ..
 $ phpize
 $ ./configure
 
