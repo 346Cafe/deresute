@@ -39,15 +39,7 @@ $ cd php-cgss
 $ cd libcgss
 $ cmake .
 $ make
-```
-
-`bin/x64/`下にある`libcgss.so.*`ファイルを共有ライブラリへパスを通してください。
-
-例 (`libcgss.so`が`/root/php-cgss/libcgss/bin/x64/`にある場合):
-```
-$ touch /etc/ld.so.conf.d/cgss.so.conf
-$ echo "/root/php-cgss/libcgss/bin/x64/" >> /etc/ld.so.conf.d/cgss.so.conf
-$ ldconfig
+$ cp bin/x64/libcgss.* /usr/lib/
 ```
 
 - php-cgssをコンパイル
