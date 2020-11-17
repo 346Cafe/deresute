@@ -15,7 +15,12 @@
 **deresute**はCGSS API / AssetBundle ToolのPHP用ライブラリです。
 
 ## セットアップ
-### php-unitylz4のコンパイル
+### 必要なパッケージのインストール
+```
+$ apt -y install git g++ make cmake composer curl php-dev php-bcmath php-curl php-mbstring php-msgpack php-sqlite3
+```
+
+### php-unity-lz4のコンパイル
 - php-unity-lz4をGitからクローン
 ```
 $ git clone https://github.com/towa0131/php-unity-lz4
@@ -53,37 +58,27 @@ $ ./configure
 $ make install
 ```
 
-エクステンションがインストールされるので`php.ini`ファイルに`extension=unitylz4`, `extension=cgss`を追加し、エクステンションを有効化してください。
+エクステンションがインストールされるので`php.ini`ファイルに`extension=unitylz4`, `extension=cgss`を追加し、有効化してください。
 
 ### deresute本体のセットアップ
 ***下記のいずれかの方法でインストールが可能です。***
 
-#### Gitからダウンロード
+#### Gitからクローン
 - **deresute**をGitからクローン
 ```
 $ git clone https://github.com/346Cafe/deresute
 $ cd deresute
 ```
 
-- Composerのインストール
-```
-$ curl -sS https://getcomposer.org/installer | php
-```
-
 - 各ライブラリのインストール
 ```
-$ php composer.phar install
+$ composer install
 ```
 
-#### Packagistから**deresute**をダウンロード
-- Composerのインストール
-```
-$ curl -sS https://getcomposer.org/installer | php
-```
-
+#### Packagistからダウンロード
 - **deresute**のダウンロード / 各ライブラリのインストール
 ```
-$ php composer.phar require towa0131/deresute
+$ composer require towa0131/deresute
 ```
 
 ### テストの実行
@@ -112,7 +107,7 @@ $ php app.php
 
 ## FAQ
 ### unitylz4のコンパイルでエラー
-既にmakeやg++などのインストールはされていますか？
+事前パッケージのインストールはされていますか？
 もしされていないならコンパイルの前にインストールを行なってください。
 
 ### 本体のAPIの使用時にエラー
@@ -120,7 +115,7 @@ $ php app.php
 
 ### test-app.phpの実行時にエラー
 `No module loaded : msgpack`などの文が表示されていませんか？
-もしされているのならば、**deresute**の使用に必要なエクステンションがインストールされていません。インストールを行うことでエラーが発生しなくなります。
+もしされているのならば、必要なエクステンションがインストールされていません。インストールを行うことでエラーが発生しなくなります。
 
 ### わからないことがあれば
 お気軽に[Issues](https://github.com/346Cafe/deresute/issues)、[Twitter](https://twitter.com/usaminium)にてご質問お願いします。
